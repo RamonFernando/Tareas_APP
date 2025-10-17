@@ -40,9 +40,9 @@
             
             $create = createTask($titulo, $descripcion, $fecha_caducidad);
             if($create)
-                echo "Tarea creada correctamente.";
+                echo "✅ Tarea creada correctamente.";
             else
-                echo "ERROR: no se pudo crear la tarea.";
+                echo "⚠️ ERROR: no se pudo crear la tarea.";
         break;
         
         case 3:
