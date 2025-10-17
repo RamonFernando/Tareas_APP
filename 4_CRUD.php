@@ -25,24 +25,41 @@
 
     // Read
     function readTask(){
-    
+        
         global $conn;
         // 1. Hacemos la consulta a la BD
         $sql = $conn->query("SELECT * FROM tareas ORDER BY id DESC");
         
         // 2. Creamos un array para guardar las rows
-        $task = array();
-
-        // 3. Recorremos toda las rows de la consulta
-        while($row = $sql->fetch_assoc()){  // devolvemos un array asociativo
-            $task[] = $row;                 // Añadimos cada fila al array
-        }
+        $tasks = array();
 
         // Retorna un array vacío si hay error en la consulta
-        if(!$sql) return [];
+        if(!$sql) {
+            echo "ERROR en la consulta $conn->error";
+            return [];
+        };
 
-        // 4. Devolvemos todas las tareas
-        return $task;
+        // Mostramos resultados
+        while($row = $sql->fetch_assoc())
+            $tasks[] = $row;
+
+        // Comprobamos si el array esta vacio
+        if(empty($tasks)){
+            echo "No hay tareas registradas";
+            return [];
+        }
+
+        // Mostramos resultados
+        foreach($tasks as $task){
+            echo "------------------------------\n";
+            echo "Id: " . $task['id'] . "\n";
+            echo "Título: " . $task['titulo'] . "\n";
+            echo "Descripción: " . $task['descripcion'] . "\n";
+            echo "Fecha: " . $task['fecha_caducidad'] . "\n";
+            echo "Completada: " . $task['completada'] . "\n";
+        }
+        
+        return $tasks;
     }
 
     // Devuelve un array asociativo de la consulta o null sino existe

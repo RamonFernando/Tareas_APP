@@ -1,11 +1,13 @@
 <?php
     include("2_conexion.php");
+    require_once("4_CRUD.php");
+
     // require_once("tareas_db");
     // $result = $conn->query("SELECT * FROM tareas ORDER BY id DESC");
 
     function mostrarMenu() {
         echo "\n=========================\n";
-        echo "📋 GESTOR DE TAREAS\n";
+        echo " 📋 GESTOR DE TAREAS\n";
         echo "=========================\n";
         echo "1. Listar tareas\n";
         echo "2. Crear nueva tarea\n";
