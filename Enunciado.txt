@@ -1,0 +1,167 @@
+Desarrolla una aplicación en PHP que permita gestionar una lista de tareas desde la consola. La aplicación
+debe ser capaz de realizar operaciones como agregar, eliminar, editar, listar y marcar tareas como completadas.
+Además, las tareas deben persistir a través de un archivo (o base de datos simple).
+Requisitos:
+    1. Uso de GitHub:
+
+        ◦ El código debe estar almacenado en un repositorio de GitHub.
+
+        ◦ Los estudiantes deben realizar commits frecuentes durante el desarrollo del proyecto, de modo que se pueda
+        ver la evolución del trabajo.
+
+        ◦ Incluir un archivo README.md con instrucciones de uso, descripción del proyecto, y cómo ejecutar los scripts
+        desde la consola.
+
+    2. Funcionalidades:
+
+        ◦ El sistema debe ser manejado completamente desde la consola. No se utilizará HTML ni frontend.
+
+        ◦ Las tareas deben ser guardadas de forma persistente (usando un archivo JSON o una base de datos como SQLite).
+
+        ◦ Debe permitir al usuario agregar tareas, eliminarlas, editarlas, ver la lista de tareas y marcar tareas como
+        completadas.
+
+    3. Operaciones:
+
+        ◦ Agregar tarea: El usuario podrá agregar tareas con un título y una descripción. Además, se le podrá asignar una
+        fecha de caducidad/finalización.
+
+        ◦ Eliminar tarea: El usuario podrá eliminar tareas existentes.
+
+        ◦ Editar tarea: El usuario podrá editar el título, descripción o fecha de caducidad de una tarea.
+
+        ◦ Marcar tarea como completada: El usuario podrá marcar tareas como completadas.
+
+        ◦ Enseñar tareas: El usuario podrá ver todas las tareas, con información sobre si están completadas o no. Las
+        tareas pueden ser filtradas por estado (completadas/no completadas).
+
+        ◦ Persistencia de datos: Las tareas deben guardarse en un archivo JSON o SQLite.
+
+    4. Interacción con la Consola:
+
+        ◦ El programa deberá ser interactivo. Se deberá permitir que el usuario ingrese los comandos y parámetros por
+        la consola.
+
+        ◦ Los usuarios deben ver mensajes claros en la consola que expliquen lo que están haciendo y el estado actual
+        de la aplicación (ej., "Tarea añadida con éxito", "Tarea eliminada", "Error: Tarea no encontrada", etc.).
+
+Requisitos Técnicos:
+    1. PHP CLI (Command Line Interface):
+
+        ◦ El código debe ejecutarse desde la consola (sin servidor web).
+
+        ◦ Debe manejar entradas y salidas de manera eficiente y clara.
+
+    2. Persistencia de Datos:
+
+        ◦ Archivo JSON: Puedes optar por almacenar las tareas en un archivo tareas.json que mantenga los datos de
+        las tareas de manera persistente.
+
+        ◦ Opción avanzada: Usar SQLite para almacenar las tareas de forma más robusta.
+
+    3. Uso de GitHub:
+
+        ◦ Deben crear un repositorio en GitHub desde el inicio del proyecto y hacer commits periódicos.
+
+        ◦ El código debe estar bien documentado, con comentarios explicativos donde sea necesario.
+
+        ◦ El archivo README.md debe contener información de cómo ejecutar el programa, qué funcionalidades tiene y
+        ejemplos de uso.
+
+Ejemplo de Uso de la Consola:
+Agregar tarea:
+php gestor.php add "Comprar pan" "Comprar pan en la tienda" "2025-10-14"
+
+Eliminar tarea:
+php gestor.php delete 2
+
+Editar tarea:
+php gestor.php edit 1 "Comprar leche" "Comprar leche en la tienda" "2025-10-16"
+
+Marcar tarea como completada:
+php gestor.php complete 1
+
+Listar tareas:
+php gestor.php list
+
+Listar tareas completadas:
+php gestor.php list --completed
+
+Funciones y Detalles Técnicos:
+    1. Agregar tarea:
+
+        ◦ Se debe almacenar la tarea en un archivo JSON (o base de datos).
+
+        ◦ La tarea debe tener un identificador único (ID), un título, una descripción y una fecha de vencimiento opcional.
+
+    2. Eliminar tarea:
+
+        ◦ El sistema debe eliminar una tarea por su ID.
+
+    3. Editar tarea:
+
+        ◦ El sistema debe permitir modificar el título, la descripción y la fecha de vencimiento de una tarea específica.
+
+    4. Marcar tarea como completada:
+
+        ◦ El sistema debe poder marcar una tarea como completada. Las tareas completadas deben tener un estado
+        booleano (completada/no completada).
+
+    5. Enseñar tareas:
+
+        ◦ El sistema debe ser capaz de mostrar todas las tareas. Se puede añadir un parámetro opcional para filtrar
+        por tareas completadas o no completadas.
+
+    6. Persistencia de datos:
+
+        ◦ Las tareas deben guardarse en un archivo JSON o base de datos. Al iniciar el programa, el sistema debe
+        cargar las tareas desde este archivo y permitir modificaciones.
+
+    7. Interfaz de usuario:
+
+        ◦ La aplicación debe ser amigable con el usuario, mostrando mensajes claros cuando se agregan, eliminan, 
+        editan o completan tareas.
+
+Ejemplo de Estructura de JSON:
+{
+    "tasks": [
+        {
+            "id": 1,
+            "title": "Comprar pan",
+            "description": "Comprar pan en la tienda",
+            "due_date": "2025-10-14",
+            "completed": false
+        },
+        {
+            "id": 2,
+            "title": "Estudiar PHP",
+            "description": "Estudiar PHP para el examen",
+            "due_date": "2025-10-15",
+            "completed": true
+        }
+    ]
+}
+
+Requisitos Adicionales:
+    • Gestión de errores: El sistema debe manejar adecuadamente los errores, como ingresar un ID de tarea incorrecto
+    o una fecha de caducidad no válida (por ejemplo que sea previa a la fecha de creación de la tarea).
+
+    • Control de versiones: Los estudiantes deben realizar commits frecuentes para demostrar el progreso del proyecto.
+    Los commits deben ser claros y descriptivos.
+
+
+Criterios de Evaluación:
+    1. Correctitud: El sistema debe realizar las operaciones correctamente: agregar, eliminar, editar, marcar como
+    completada, enseñar en una lista y filtrar tareas.
+
+    2. Persistencia de datos: Las tareas deben persistir en un archivo JSON o base de datos.
+
+    3. Interactividad: La aplicación debe ser fácil de usar desde la consola.
+
+    4. Calidad del código: El código debe estar bien estructurado y ser legible. Los estudiantes deben usar funciones
+    y estructuras adecuadas.
+
+    5. Uso adecuado de GitHub: El repositorio debe estar bien gestionado, con commits frecuentes y claros.
+    El README.md debe ser completo.
+
+    6. Documentación: El código debe estar bien comentado y explicarse claramente en el README.md.
