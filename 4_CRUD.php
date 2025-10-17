@@ -59,7 +59,7 @@
         $task = $result->fetch_assoc();
 
         $sql->close();
-        return $task ?: null; // Devuelve la consulta o null si esta vacia
+        return $task ?: null; // Devuelve un array con la consulta o null si esta vacia
     }
 
     // Update
