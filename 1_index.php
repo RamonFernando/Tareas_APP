@@ -42,7 +42,7 @@
             if($create)
                 echo "✅ Tarea creada correctamente.";
             else
-                echo "⚠️ ERROR: no se pudo crear la tarea.";
+                echo "❌ ERROR: no se pudo crear la tarea.";
         break;
         
         case 3:
@@ -64,11 +64,11 @@
 
             $update = updateTask($id, $titulo, $descripcion, $fecha_caducidad, $completada);
             if($update)
-                echo "Se ha actualizado la tarea $id correctamente";
+                echo "✅ Se ha actualizado la tarea $id correctamente";
             elseif($id == null)
-                echo "No se encontrol el $id de la tarea";
+                echo "⚠️ No se encontrol el $id de la tarea";
             else
-                echo "ERROR: no se pudo realizar la actualización.";
+                echo "❌ ERROR: no se pudo realizar la actualización.";
         break;
 
         case 4:
@@ -77,19 +77,19 @@
             $id = trim(fgets(STDIN));
             
             if(deleteTask($id))
-                echo "Se ha eliminado la tarea $id correctamente";
+                echo "✅ Se ha eliminado la tarea $id correctamente";
             elseif($id == null)
-                echo "Tarea $id no encontrada";
+                echo "⚠️ Tarea $id no encontrada";
             else
-                echo "ERROR: No se ha podido eliminar la tarea $id.";
+                echo "❌ ERROR: No se ha podido eliminar la tarea $id.";
         break;
 
         case 5:
-            echo "Saliendo del programa...";
+            echo "❎ Saliendo del programa...";
             exit;
         
         default:
-            echo "Opcion no valida";
+            echo "⚠️ Opcion no valida";
     }
     
 

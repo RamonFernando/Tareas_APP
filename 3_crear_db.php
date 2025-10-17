@@ -25,15 +25,14 @@
     // 3.3 Comprueba si se creo la tabla correctamente y muestra un mensaje
     function showMessageTable($create_table, $conn){
         if($create_table)
-            echo "\nTabla creada correctamente.";
+            echo "✅ Tabla creada correctamente.\n";
         else
-            echo "ERROR: no se pudo realizar la operacion $conn->error";
+            echo "❌ ERROR: no se pudo realizar la operacion $conn->error \n";
     }
 
     // 3.4 Mostramos el mensaje al usuario
     showMessageTable($create_table, $conn);
 
-    
     // Insertar tareas de ejemplo
     $insert1 = "INSERT INTO tareas (titulo, descripcion, fecha_caducidad, completada)
         VALUES ('Estudiar PHP', 'Repasar temas de PHP para FP DAW', '2025-10-20', true)";

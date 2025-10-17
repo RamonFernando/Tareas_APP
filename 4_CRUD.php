@@ -35,7 +35,7 @@
 
         // Retorna un array vacío si hay error en la consulta
         if(!$sql) {
-            echo "ERROR en la consulta $conn->error";
+            echo "❌ ERROR en la consulta $conn->error";
             return [];
         };
 
@@ -45,7 +45,7 @@
 
         // Comprobamos si el array esta vacio
         if(empty($tasks)){
-            echo "No hay tareas registradas";
+            echo "⚠️ No hay tareas registradas";
             return [];
         }
 
@@ -58,7 +58,6 @@
             echo "Fecha: " . $task['fecha_caducidad'] . "\n";
             echo "Completada: " . $task['completada'] . "\n";
         }
-        
         return $tasks;
     }
 
@@ -96,6 +95,13 @@
         $sql = $conn->prepare("DELETE FROM tareas WHERE id = ?");
         $sql->bind_param("i", $id);
         $result = $sql->execute();
+
+        // Comprobamos si el array esta vacio
+        if(empty($tasks)){
+            echo "⚠️ Registro no encontrado";
+            return [];
+        }
+
         $sql->close();
         return $result;
     }

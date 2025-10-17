@@ -9,7 +9,7 @@
 
     // 2.3 Verificamos que la conexion se realice
     if($conn->connect_error)
-        die("Error de conexion: $conn->connect_error");
+        die("❌ Error de conexion: $conn->connect_error");
     // --------------------------------------------------------------------------------------- //
     
     // 2.4 Creamos la base de datos si no existe
@@ -30,9 +30,9 @@
     // 2.6 Comprobamos si la BD se creo correctamente y mostramos un mensaje
     function showMessageDB($created_db, $conn): void {
         if($created_db)
-            echo "Base de datos creada correctamente.";
+            echo "✅ Base de datos creada correctamente.";
         else
-            echo "ERROR: no se pudo realizar la operacion $conn->error";
+            echo "❌ ERROR: no se pudo realizar la operacion $conn->error";
     }
 
     // 2.7 Llamamos a la funcion y mostramos el mensaje al usuario
