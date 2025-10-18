@@ -11,4 +11,12 @@ require_once("includes.php");
         VALUES ('Preparar entrega DAW', 'Terminar proyecto y subirlo al servidor', '2025-10-25', false)";
     $insert4 = "INSERT INTO tareas (titulo, descripcion, fecha_caducidad, completada)
         VALUES ('Preparar entrega C#', 'Terminar proyecto y subirlo al servidor', '2025-11-25', true)";
+
+    // Ejecutar las consultas
+    $conn->query($insert1);
+    $conn->query($insert2);
+    $conn->query($insert3);
+    $conn->query($insert4);
+
+    echo "✅ Tareas de ejemplo insertadas correctamente.\n";
 ?>

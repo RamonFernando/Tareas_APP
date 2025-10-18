@@ -58,7 +58,7 @@ function searchTask() {
             break;
 
         case 4:
-            echo "¿Desea ver tareas completadas (1) o no completadas (0)?: ";
+            echo "¿Desea ver tareas completadas (1)✅ o no completadas (0)❌?: ";
             $completada = intval(trim(fgets(STDIN)));
             $sql = $conn->prepare("SELECT * FROM tareas WHERE completada = ?");
             $sql->bind_param("i", $completada);
