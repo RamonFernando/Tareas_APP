@@ -68,6 +68,16 @@
     // Update
     function updateTask($id, $titulo, $descripcion, $fecha, $completada){
         global $conn;
+
+        // Preguntar al usuario antes de eliminar
+        echo "¿Estás seguro de que deseas actualizar la tarea con ID $id? (s/n): ";
+        $answer = trim(fgets(STDIN));
+
+        if (strtolower($answer) !== 's') {
+            echo "❌ Actualización cancelada.\n";
+            return false; // No actualiza
+        }
+
         $sql = $conn->prepare("UPDATE tareas SET titulo = ?, descripcion = ?,
                 fecha_caducidad = ?, completada = ? WHERE id = ?");
         $sql->bind_param("sssii",$titulo, $descripcion, $fecha, $completada, $id);
