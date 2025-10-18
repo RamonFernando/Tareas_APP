@@ -1,6 +1,7 @@
 <?php
-include("2_conexion.php");
-require_once("4_CRUD.php");
+require_once("2_conexion.php");
+include("includes.php");
+
 
 function mostrarMenu() {
     echo "\n=========================\n";
@@ -26,19 +27,11 @@ while (true) {
 
         case 2:
             // Crear tarea
-            echo "Título: ";
-            $titulo = trim(fgets(STDIN));
-
-            echo "Descripción: ";
-            $descripcion = trim(fgets(STDIN));
-
-            echo "Fecha (YYYY-MM-DD): ";
-            $fecha_caducidad = trim(fgets(STDIN));
-
-            $create = createTask($titulo, $descripcion, $fecha_caducidad);
-            echo $create
-                ? "✅ Tarea creada correctamente.\n"
-                : "❌ ERROR: no se pudo crear la tarea.\n";
+            $titulo = "";
+            $descripcion = "";
+            $fecha_caducidad = "";
+            createTask($titulo, $descripcion, $fecha_caducidad);
+            
             break;
 
         case 3:
