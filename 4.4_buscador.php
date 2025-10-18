@@ -60,6 +60,12 @@ function searchTask() {
         case 4:
             echo "¿Desea ver tareas completadas (1)✅ o no completadas (0)❌?: ";
             $completada = intval(trim(fgets(STDIN)));
+
+            if($option !== 1 || $option !== 0){
+                echo "Debes introducir un caracter numerico (✅ 1 para completada / ❌ 0 para incompleta)";
+                return searchTask();
+            }
+
             $sql = $conn->prepare("SELECT * FROM tareas WHERE completada = ?");
             $sql->bind_param("i", $completada);
             $sql->execute();
@@ -76,6 +82,7 @@ function searchTask() {
 
         default:
             echo "⚠️ Opción no válida.\n";
+            searchTask();
     }
 }
 
