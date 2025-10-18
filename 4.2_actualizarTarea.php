@@ -1,5 +1,5 @@
 <?php
-include("includes.php");
+require_once("includes.php");
 // Update
     function updateTask($id){
         global $conn;

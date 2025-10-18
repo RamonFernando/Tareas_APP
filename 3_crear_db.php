@@ -33,15 +33,6 @@
     // 3.4 Mostramos el mensaje al usuario
     showMessageTable($create_table, $conn);
 
-    // Insertar tareas de ejemplo
-    $insert1 = "INSERT INTO tareas (titulo, descripcion, fecha_caducidad, completada)
-        VALUES ('Estudiar PHP', 'Repasar temas de PHP para FP DAW', '2025-10-20', true)";
-    $insert2 = "INSERT INTO tareas (titulo, descripcion, fecha_caducidad, completada)
-        VALUES ('Comprar pan', 'Ir a la panadería a comprar pan fresco', '2025-10-16', false)";
-    $insert3 = "INSERT INTO tareas (titulo, descripcion, fecha_caducidad, completada)
-        VALUES ('Preparar entrega DAW', 'Terminar proyecto y subirlo al servidor', '2025-10-25', false)";
-    
-
     // 3.5 Cerramos la conexion
     $conn->close();
 ?>

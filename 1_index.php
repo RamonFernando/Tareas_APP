@@ -1,6 +1,6 @@
 <?php
 require_once("2_conexion.php");
-include("includes.php");
+require_once("includes.php");
 
 
 function mostrarMenu() {
@@ -11,7 +11,8 @@ function mostrarMenu() {
     echo "2. Crear nueva tarea\n";
     echo "3. Editar tarea\n";
     echo "4. Eliminar tarea\n";
-    echo "5. Salir\n";
+    echo "5. Buscar tarea\n";
+    echo "6. Salir\n";
     echo "Seleccione una opción: ";
 }
 
@@ -49,8 +50,12 @@ while (true) {
             deleteTask($id);
 
             break;
-
         case 5:
+            // Buscar
+            echo "Buscar por id: ";
+            searchTask();
+            break;
+        case 6:
             echo "❎ Saliendo del programa...\n";
             exit;
 
