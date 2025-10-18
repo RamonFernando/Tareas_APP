@@ -49,7 +49,7 @@
         }
         return $tasks;
     }
-
+    // Busca la consulta por el id
     // Devuelve un array asociativo de la consulta o null sino existe
     function getTaskById($id): ?array {
         global $conn;
@@ -66,9 +66,35 @@
     }
 
     // Update
-    function updateTask($id, $titulo, $descripcion, $fecha, $completada){
+    function updateTask($id){
         global $conn;
+        
+        $task = getTaskById($id);
+        if(!$task) {
+            echo "⚠️ No se encontro la tarea con Id $id";
+            return false;
+        }
+        echo "Actualización de la tarea ID $id. Rellenar solo los campos deseados.\n";
 
+        //Informacion
+        echo "Título actual:".  $task['titulo'] . "\nNuevo título: ";
+        $titulo = trim(fgets(STDIN));
+        if ($titulo === '') $titulo = $task['titulo'];
+
+        echo "Descripción actual:" . $task['descripcion'] . "\nNueva descripción: ";
+        $descripcion = trim(fgets(STDIN));
+        if ($descripcion === '') $descripcion = $task['descripcion'];
+
+        echo "Fecha actual: " . $task['fecha_caducidad'] . "\nNueva fecha (YYYY-MM-DD): ";
+        $fecha = trim(fgets(STDIN));
+        if ($fecha === '') $fecha = $task['fecha_caducidad'];
+
+        echo "Completada actualmente (1 = sí, 0 = no): {$task['completada']}\nNuevo valor (1 o 0): ";
+        $completada_task = trim(fgets(STDIN));
+        ($completada_task === '')
+            ? $completada = $task['completada']
+            : $completada = intval($completada_task);
+        
         // Preguntar al usuario antes de eliminar
         echo "¿Estás seguro de que deseas actualizar la tarea con ID $id? (s/n): ";
         $answer = trim(fgets(STDIN));
@@ -84,17 +110,23 @@
         $result = $sql->execute();
 
         // Comprobamos si la actualización se realizo correctamente
-        ($sql->affected_rows > 0) ?
-            "✅ Actualización realizada correctamente" :
-            "⚠️ No se encontró el id: ($id) o ha ocurrido un error al actualizar.";
-        
-            $sql->close();
+        echo ($sql->affected_rows > 0)
+            ? "✅ Actualización realizada correctamente\n"
+            : "⚠️ No se encontró el id: ($id) o ha ocurrido un error al actualizar.\n";
+
+        $sql->close();
         return $result;
     }
 
     // Delete
     function deleteTask($id){
         global $conn;
+        // Verificar si la tarea existe
+        $task = getTaskById($id);
+        if (!$task) {
+            echo "⚠️ No se encontró la tarea con ID $id.\n";
+            return false;
+        }
 
         // Preguntar al usuario antes de eliminar
         echo "¿Estás seguro de que deseas eliminar la tarea con ID $id? (s/n): ";
@@ -110,9 +142,9 @@
         $result = $sql->execute();
 
         // Comprobamos si el registro fue eliminado
-        ($sql->affected_rows > 0) ?
-            "✅ Tarea eliminada correctamente" :
-            "⚠️ Tarea no encontrado o eliminada";
+        echo ($sql->affected_rows > 0)
+            ? "✅ Tarea eliminada correctamente\n"
+            : "⚠️ Tarea no encontrada o ya eliminada\n";
 
         $sql->close();
         return $result;
