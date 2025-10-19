@@ -54,22 +54,47 @@ function searchTask() {
             break;
 
         case 3:
-            echo "Ingrese la fecha (YYYY-MM-DD): ";
+            echo "Ingrese la fecha (YYYY o YYYY-MM o YYYY-MM-DD): ";
             $fecha = trim(fgets(STDIN));
 
-            // Agregando regex para evitar errores si el usuario introduce una fecha invalida
-            if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha)) {
-                echo "❌ Formato incorrecto. Use YYYY-MM-DD (por ejemplo, 2025-10-19)\n";
+            // regex
+            $fullDate = preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha); // YYYY-MM-DD
+            $yearAndMonth = preg_match('/^\d{4}-\d{2}$/', $fecha); // YYYY-MM
+            $yearDate = preg_match('/^\d{4}$/', $fecha); // YYYY
+
+            // Detectar qué tipo de formato escribió el usuario
+            if ($fullDate) {
+                // Caso 1: formato completo YYYY-MM-DD → buscar hasta ese mes
+                $month = substr($fecha, 0, 7);
+                $sql = $conn->prepare("SELECT * FROM tareas WHERE DATE_FORMAT(fecha_caducidad, '%Y-%m') <= ?");
+                $sql->bind_param("s", $month);
+
+            } elseif ($yearAndMonth) {
+                // Caso 2: formato YYYY-MM → buscar exactamente ese mes
+                $sql = $conn->prepare("SELECT * FROM tareas WHERE DATE_FORMAT(fecha_caducidad, '%Y-%m') = ?");
+                $sql->bind_param("s", $fecha);
+
+            } elseif ($yearDate) {
+                // Caso 3: solo año YYYY → buscar todas las tareas del año
+                $sql = $conn->prepare("SELECT * FROM tareas WHERE YEAR(fecha_caducidad) = ?");
+                $sql->bind_param("s", $fecha);
+
+            } else {
+                // Entrada inválida
+                echo "❌ Formato incorrecto. Use uno de los siguientes formatos:\n";
+                echo "   - YYYY        → Buscar por año (ej: 2025)\n";
+                echo "   - YYYY-MM     → Buscar por mes (ej: 2025-10)\n";
+                echo "   - YYYY-MM-DD  → Buscar hasta ese mes (ej: 2025-10-19)\n";
+                searchTask();
                 break;
             }
 
-            $month = substr($fecha, 0,7); // para buscar por mes y año
-            $sql = $conn->prepare("SELECT * FROM tareas WHERE DATE_FORMAT(fecha_caducidad, '%Y-%m') <= ?");
-            $sql->bind_param("s", $month);
+            // Ejecutar consulta y mostrar resultados
             $sql->execute();
             $result = $sql->get_result();
             $tasks = $result->fetch_all(MYSQLI_ASSOC);
             $sql->close();
+
             displayData($tasks);
             searchTask();
             break;
