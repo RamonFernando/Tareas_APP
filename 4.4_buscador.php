@@ -22,11 +22,11 @@ function searchTask() {
             echo "Ingrese el ID de la tarea: ";
             $id = intval(trim(fgets(STDIN)));
             $task = getTaskById($id);
-            if ($task) {
+            if ($task)
                 displayData([$task]);
-            } else {
+            else
                 echo "\n⚠️  No se encontró ninguna tarea con el ID $id.\n";
-            }
+            
             searchTask();
             break;
 
@@ -93,9 +93,15 @@ function searchTask() {
             $sql->execute();
             $result = $sql->get_result();
             $tasks = $result->fetch_all(MYSQLI_ASSOC);
+            // Mostrar resultados
+            if (!empty($tasks)) {
+                displayData($tasks);
+                echo "\n✅ Se han encontrado " . count($tasks) . " coincidencias.\n";
+            } else {
+                echo "\n⚠️  No se han encontrado tareas para esa fecha.\n";
+            }
+            
             $sql->close();
-
-            displayData($tasks);
             searchTask();
             break;
 

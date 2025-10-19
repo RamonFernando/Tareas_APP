@@ -1,5 +1,5 @@
 <?php
-    require_once("2_conexion.php");
+    require_once("1_conexion.php");
 
     // 3.1 Creamos la tabla tareas
     $sql_table = "CREATE TABLE IF NOT EXISTS tareas (

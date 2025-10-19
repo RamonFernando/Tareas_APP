@@ -1,5 +1,5 @@
 <?php
-require_once("2_conexion.php");
+require_once("1_conexion.php");
 require_once("includes.php");
 
 
