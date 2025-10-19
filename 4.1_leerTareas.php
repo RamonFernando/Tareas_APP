@@ -7,7 +7,7 @@ function readTask(){
         $tasks = array();
 
         if(!$sql) { // Retorna un array vacío si hay error en la consulta
-            echo "❌ ERROR en la consulta $conn->error";
+            echo "❌  ERROR en la consulta $conn->error";
             return [];
         };
 
@@ -16,7 +16,7 @@ function readTask(){
             $tasks[] = $row;
         
         if(empty($tasks)){ // Comprobamos si el array esta vacio
-            echo "⚠️ No hay tareas registradas";
+            echo "⚠️  No hay tareas registradas";
             return [];
         }
 

@@ -54,9 +54,9 @@
         // Insertar si no existe
         $insert->bind_param("sssi", $titulo, $descripcion, $fecha, $completada);
         if ($insert->execute()) {
-            echo "✅ Insertada: $titulo ($fecha)\n";
+            echo "✅  Insertada: $titulo ($fecha)\n";
         } else {
-            echo "❌ Error insertando '$titulo': " . $conn->error . "\n";
+            echo "❌  Error insertando '$titulo': " . $conn->error . "\n";
         }
     }
 

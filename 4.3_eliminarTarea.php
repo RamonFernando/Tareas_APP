@@ -7,7 +7,7 @@ require_once("includes.php");
         // Verificar si la tarea existe
         $task = getTaskById($id);
         if (!$task) {
-            echo "⚠️ No se encontró la tarea con ID $id.\n";
+            echo "⚠️  No se encontró la tarea con ID $id.\n";
             return false;
         }
 
@@ -16,7 +16,7 @@ require_once("includes.php");
         $answer = trim(fgets(STDIN));
 
         if (strtolower($answer) !== 's') {
-            echo "❌ Eliminación cancelada.\n";
+            echo "❌  Eliminación cancelada.\n";
             return false; // No elimina la tarea
         }
 
@@ -26,8 +26,8 @@ require_once("includes.php");
 
         // Comprobamos si el registro fue eliminado
         echo ($sql->affected_rows > 0)
-            ? "✅ Tarea eliminada correctamente\n"
-            : "⚠️ Tarea no encontrada o ya eliminada\n";
+            ? "✅  Tarea eliminada correctamente\n"
+            : "⚠️  Tarea no encontrada o ya eliminada\n";
 
         $sql->close();
         return $result;

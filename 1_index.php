@@ -57,11 +57,11 @@ while (true) {
             searchTask();
             break;
         case 6:
-            echo "❎ Saliendo del programa...\n";
+            echo "❎  Saliendo del programa...\n";
             exit;
 
         default:
-            echo "⚠️ Opción no válida. Intente de nuevo.\n";
+            echo "⚠️  Opción no válida. Intente de nuevo.\n";
             break;
     }
 }

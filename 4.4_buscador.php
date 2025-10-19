@@ -25,7 +25,7 @@ function searchTask() {
             if ($task) {
                 displayData([$task]);
             } else {
-                echo "⚠️ No se encontró ninguna tarea con el ID $id.\n";
+                echo "\n⚠️  No se encontró ninguna tarea con el ID $id.\n";
             }
             searchTask();
             break;
@@ -81,7 +81,7 @@ function searchTask() {
 
             } else {
                 // Entrada inválida
-                echo "❌ Formato incorrecto. Use uno de los siguientes formatos:\n";
+                echo "❌  Formato incorrecto. Use uno de los siguientes formatos:\n";
                 echo "   - YYYY        → Buscar por año (ej: 2025)\n";
                 echo "   - YYYY-MM     → Buscar por mes (ej: 2025-10)\n";
                 echo "   - YYYY-MM-DD  → Buscar hasta ese mes (ej: 2025-10-19)\n";
@@ -104,37 +104,38 @@ function searchTask() {
             $completada = trim(fgets(STDIN));
 
             if (!is_numeric($completada) || ($completada != 1 && $completada != 0)) {
-                echo "⚠️  Debes introducir un número válido (✅ 1 para completada / ❌ 0 para incompleta)\n";
+                echo "\n⚠️  Debes introducir un número válido (✅ 1 para completada / ❌ 0 para incompleta)\n";
                 return searchTask();
             }
 
             $completada = intval($completada);
-
             // Mostrar título informativo antes de los resultados
-            if ($completada === 1) {
-                echo "📋 Mostrando tareas ✅ completadas:\n";
-            } else {
-                echo "📋 Mostrando tareas ❌ pendientes:\n";
-            }
-
+            echo ($completada === 1)
+                ? "\n📋 Mostrando tareas ✅ completadas:"
+                : "\n📋 Mostrando tareas ❌ pendientes:";
+                
+            
             $sql = $conn->prepare("SELECT * FROM tareas WHERE completada = ?");
             $sql->bind_param("i", $completada);
             $sql->execute();
-
             $result = $sql->get_result();
             $tasks = $result->fetch_all(MYSQLI_ASSOC);
             $sql->close();
-
+            
             displayData($tasks);
+            echo ($completada === 1)
+                ? "\nHay un total de: " . count($tasks) . "📋 tareas completadas✅.\n"
+                : "\nHay un total de: " . count($tasks) . "📋 tareas incompletas❌.\n";
+            
             searchTask();
             break;
 
         case 5:
-            echo "↩️ Volviendo al menú principal...\n";
+            echo "↩️  Volviendo al menú principal...\n";
             return;
 
         default:
-            echo "⚠️ Opción no válida.\n";
+            echo "⚠️  Opción no válida.\n";
             searchTask();
     }
 }
@@ -142,7 +143,7 @@ function searchTask() {
  // Muestra resultados en el mismo formato que readTask()
 function displayData(array $tasks) {
     if (empty($tasks)) {
-        echo "⚠️ No se encontraron tareas que coincidan con la búsqueda.\n";
+        echo "⚠️  No se encontraron tareas que coincidan con la búsqueda.\n";
         return;
     }
 

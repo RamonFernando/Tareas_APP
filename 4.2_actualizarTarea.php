@@ -6,7 +6,7 @@ require_once("includes.php");
         
         $task = getTaskById($id);
         if(!$task) {
-            echo "⚠️ No se encontro la tarea con Id $id";
+            echo "⚠️  No se encontro la tarea con Id $id";
             return false;
         }
         echo "Actualización de la tarea ID $id. Rellenar solo los campos deseados.\n";
@@ -46,8 +46,8 @@ require_once("includes.php");
 
         // Comprobamos si la actualización se realizo correctamente
         echo ($sql->affected_rows > 0)
-            ? "✅ Actualización realizada correctamente\n"
-            : "⚠️ No se encontró el id: ($id) o ha ocurrido un error al actualizar.\n";
+            ? "✅  Actualización realizada correctamente\n"
+            : "⚠️  No se encontró el id: ($id) o ha ocurrido un error al actualizar.\n";
 
         $sql->close();
         return $result;

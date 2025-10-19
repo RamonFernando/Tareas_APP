@@ -12,7 +12,7 @@
         // 2. Enlazamos los parámetros ("sss" = string, string, string), si fuera un entero "i" = integer
         $sql->bind_param("sss", $titulo, $descripcion, $fecha_caducidad);
         
-        echo "🆕 Nueva Tarea: \n";
+        echo "🆕  Nueva Tarea: \n";
         echo "Título: ";
         $titulo = trim(fgets(STDIN));
 
@@ -24,8 +24,8 @@
 
         $result = $sql->execute();
         echo $result
-                ? "✅ Tarea creada correctamente.\n"
-                : "❌ ERROR: no se pudo crear la tarea.\n";
+                ? "✅  Tarea creada correctamente.\n"
+                : "❌  ERROR: no se pudo crear la tarea.\n";
         $sql->close();
         return $result;
     }
