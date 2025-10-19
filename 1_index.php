@@ -24,6 +24,7 @@ while (true) {
         case 1:
             // Listar tareas
             readTask();
+            echo "📋  Cantidad de tareas registradas: " . count(readTask()) . "🧮\n";
             break;
 
         case 2:

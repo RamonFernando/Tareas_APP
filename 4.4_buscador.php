@@ -101,19 +101,30 @@ function searchTask() {
 
         case 4:
             echo "¿Desea ver tareas completadas (1)✅ o no completadas (0)❌?: ";
-            $completada = intval(trim(fgets(STDIN)));
+            $completada = trim(fgets(STDIN));
 
-            if($option !== 1 || $option !== 0){
-                echo "Debes introducir un caracter numerico (✅ 1 para completada / ❌ 0 para incompleta)";
+            if (!is_numeric($completada) || ($completada != 1 && $completada != 0)) {
+                echo "⚠️  Debes introducir un número válido (✅ 1 para completada / ❌ 0 para incompleta)\n";
                 return searchTask();
+            }
+
+            $completada = intval($completada);
+
+            // Mostrar título informativo antes de los resultados
+            if ($completada === 1) {
+                echo "📋 Mostrando tareas ✅ completadas:\n";
+            } else {
+                echo "📋 Mostrando tareas ❌ pendientes:\n";
             }
 
             $sql = $conn->prepare("SELECT * FROM tareas WHERE completada = ?");
             $sql->bind_param("i", $completada);
             $sql->execute();
+
             $result = $sql->get_result();
             $tasks = $result->fetch_all(MYSQLI_ASSOC);
             $sql->close();
+
             displayData($tasks);
             searchTask();
             break;
