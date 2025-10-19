@@ -53,7 +53,6 @@ while (true) {
             break;
         case 5:
             // Buscar
-            echo "Buscar por id: ";
             searchTask();
             break;
         case 6:

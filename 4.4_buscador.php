@@ -48,8 +48,13 @@ function searchTask() {
             $sql->execute();
             $result = $sql->get_result();
             $tasks = $result->fetch_all(MYSQLI_ASSOC);
+
+            // Mostrar resultados
+            if (!empty($tasks)) {
+                displayData($tasks);
+                echo "\n✅ Se han encontrado " . count($tasks) . " coincidencias.\n";
+            }
             $sql->close();
-            displayData($tasks);
             searchTask();
             break;
 
