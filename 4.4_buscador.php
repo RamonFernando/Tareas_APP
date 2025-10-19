@@ -31,10 +31,19 @@ function searchTask() {
             break;
 
         case 2:
+
+            // Funcion que valida la busqueda de titulo
+            function likeParam($param){
+                $result = trim($param); // elimina espacios
+                $result = addcslashes($param, '%_'); // elimina de la busqueda %_
+                $result = strtolower($param); // convierte a mayuscula
+                return "%$result%";
+            }
+
             echo "Ingrese el título o parte del título: ";
             $titulo = trim(fgets(STDIN));
-            $sql = $conn->prepare("SELECT * FROM tareas WHERE titulo LIKE ?");
-            $param = "%$titulo%";
+            $sql = $conn->prepare("SELECT * FROM tareas WHERE LOWER(titulo) LIKE ?");
+            $param = likeParam("%$titulo%");
             $sql->bind_param("s", $param);
             $sql->execute();
             $result = $sql->get_result();
