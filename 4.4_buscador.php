@@ -8,12 +8,12 @@ function searchTask() {
     echo "\n=========================\n";
     echo " 🔍 BUSCADOR DE TAREAS\n";
     echo "=========================\n";
-    echo "1. Buscar por ID\n";
-    echo "2. Buscar por Título\n";
-    echo "3. Buscar por Fecha de caducidad\n";
-    echo "4. Buscar por Estado (completada o no)\n";
-    echo "5. Volver al menú principal\n";
-    echo "Seleccione una opción: ";
+    echo "1. 🆔 Buscar por ID\n";
+    echo "2. 📌 Buscar por Título\n";
+    echo "3. 📅 Buscar por Fecha de caducidad\n";
+    echo "4. 📊 Buscar por Estado (completada o no)\n";
+    echo "5. ↩️  Volver al menú principal\n";
+    echo "👉  Seleccione una opción: ";
 
     $option = trim(fgets(STDIN));
 

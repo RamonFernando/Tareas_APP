@@ -7,13 +7,13 @@ function mostrarMenu() {
     echo "\n=========================\n";
     echo " 📋 GESTOR DE TAREAS\n";
     echo "=========================\n";
-    echo "1. Listar tareas\n";
-    echo "2. Crear nueva tarea\n";
-    echo "3. Editar tarea\n";
-    echo "4. Eliminar tarea\n";
-    echo "5. Buscar tarea\n";
-    echo "6. Salir\n";
-    echo "Seleccione una opción: ";
+    echo "1. 📜  Listar tareas\n";
+    echo "2. ✏️   Crear nueva tarea\n";
+    echo "3. 🛠️   Editar tarea\n";
+    echo "4. 🗑️   Eliminar tarea\n";
+    echo "5. 🔍  Buscar tarea\n";
+    echo "6. 🚪  Salir\n";
+    echo "👉  Seleccione una opción: ";
 }
 
 while (true) {
