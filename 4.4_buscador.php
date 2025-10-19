@@ -56,8 +56,16 @@ function searchTask() {
         case 3:
             echo "Ingrese la fecha (YYYY-MM-DD): ";
             $fecha = trim(fgets(STDIN));
-            $sql = $conn->prepare("SELECT * FROM tareas WHERE fecha_caducidad = ?");
-            $sql->bind_param("s", $fecha);
+
+            // Agregando regex para evitar errores si el usuario introduce una fecha invalida
+            if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha)) {
+                echo "❌ Formato incorrecto. Use YYYY-MM-DD (por ejemplo, 2025-10-19)\n";
+                break;
+            }
+
+            $month = substr($fecha, 0,7); // para buscar por mes y año
+            $sql = $conn->prepare("SELECT * FROM tareas WHERE DATE_FORMAT(fecha_caducidad, '%Y-%m') <= ?");
+            $sql->bind_param("s", $month);
             $sql->execute();
             $result = $sql->get_result();
             $tasks = $result->fetch_all(MYSQLI_ASSOC);
