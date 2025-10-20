@@ -62,95 +62,168 @@ Tareas_APP/
 ---
 
 2️⃣ Clonar el repositorio
-bash
+
+````bash
 git clone https://github.com/RamonFernando/Tareas_APP.git
+````
 
 3️⃣ Iniciar servicios en XAMPP
 Abre el panel de control de XAMPP y activa:
 ✅ **Apache**
 ✅ **MySQL**
 
+4️⃣ Ejecución
+> Abre el Visual Estudio Code 💠
+> Busca los 3 puntos en la parte superior de la izquierda ⋯
+> Señala "Nueva terminal"
+> Dentro de la consola escribe: cd y la direccion del proyecto. 🗂️
+    Ej: cd C:\Users\Ramon\Ramon Dropbox\Ramon Perez\PC\Desktop\Tareas_APP
+> Una vez dentro escribe php index.php y te saldra el menú principal
+    Ej:
+
+````bash
+    C:\Users\Ramon\Ramon Dropbox\Ramon Perez\PC\Desktop\Tareas_APP>php index.php
+    ✅ Base de datos creada correctamente.
+
+    =========================
+    📋 GESTOR DE TAREAS
+    =========================
+    1. 📜  Listar tareas
+    2. ✏️   Crear nueva tarea
+    3. 🛠️   Editar tarea
+    4. 🗑️   Eliminar tarea
+    5. 🔍  Buscar tarea
+    6. 🚪  Salir
+    👉  Seleccione una opción:
+
+````
+
+## ⚙️ Descripción mas detallada
+
+A continuacion explicacion del proyecto archivo por archivo.
+
+**🗄️ 1_conexion.php — Conexión y Creación de Base de Datos (Tareas_APP)**
+Este script PHP forma parte del proyecto **Tareas_APP**, una aplicación de gestión de tareas desarrollada en PHP como práctica del módulo **Entorno Servidor (DAW)**.
+Su función principal es **establecer la conexión con MySQL** y **crear la base de datos `tareas_db`** si aún no existe.
+
 ---
 
-4️⃣ Crear la base de datos
-Desde la terminal, dentro de la carpeta del proyecto, ejecuta:
--- bash --
-php 3_crear_db.php
-php 2_crear_tabla.php
+El archivo `1_conexion.php` realiza los siguientes pasos:
 
-También puedes comprobar los resultados en **MySQL Workbench**.
-Debería aparecer una base de datos llamada `tareas_db` con su tabla correspondiente.
+1 **Definición de variables de entorno**
+   Configura los datos básicos de conexión:
 
----
+````php
+   $servername = "localhost";
+   $username = "root";
+   $password = "";
+````
 
-5️⃣ Configurar la conexión
-Edita el archivo `1_conexion.php` y asegúrate de tener tus credenciales correctas:
+2 **Creación de la conexión**
+Se establece la conexión con el servidor MySQL mediante la extensión MySQLi:
 
-```php
-$servername = "localhost";
-$username   = "root";
-$password   = "";
-$dbname     = "tareas_db";
+````php
+$conn = new mysqli($servername, $username, $password);
+````
 
-$conn = mysqli_connect($servername, $username, $password, $dbname);
+3 **Verificación de conexión**
+Comprueba si la conexión se ha realizado correctamente.
+En caso de error, el programa finaliza mostrando el mensaje correspondiente:
 
-if (!$conn) {
-    die("Conexión fallida: " . mysqli_connect_error());
+````php
+if($conn->connect_error)
+    die("❌ Error de conexion: $conn->connect_error");
+````
+
+4 **Creación de la base de datos**
+Si la base de datos tareas_db no existe, se crea automáticamente:
+
+````php
+$sql_db = "CREATE DATABASE IF NOT EXISTS tareas_db";>
+````
+
+La función create_db() ejecuta dicha consulta y devuelve true o false según el resultado.
+
+5 **Mostrar mensaje de resultado**
+Se utiliza una función separada para mostrar mensajes al usuario, informando del éxito o fallo de la operación:
+
+````php
+function showMessageDB($created_db, $conn): void {
+    if($created_db)
+        echo "✅ Base de datos creada correctamente.\n";
+    else
+        echo "❌ ERROR: no se pudo realizar la operacion $conn->error\n";
 }
-```
+````
 
----
+6 **Selección de la base de datos**
+Finalmente, se selecciona la base de datos creada para continuar con el resto del proyecto:
 
-6️⃣ Ejecutar la aplicación
-En la terminal, dentro del proyecto, escribe:
--- bash --
-php index.php
+````php
+$conn->select_db("tareas_db");
+````
 
-Aparecerá un menú como este:
+**🧱 2_crear_db.php — Creación de la Tabla `tareas` (Tareas_APP)**
 
-==========================
-   GESTIÓN DE TAREAS PHP
-==========================
+Este script PHP pertenece al proyecto **Tareas_APP**, y tiene como objetivo **crear la tabla principal `tareas`** dentro de la base de datos `tareas_db`, previamente creada con `1_conexion.php`.
 
-1. Crear tarea
-2. Leer tareas
-3. Actualizar tarea
-4. Eliminar tarea
-5. Buscar tarea
-6. Salir
+El archivo `2_crear_db.php` realiza los siguientes pasos:
 
----
+1 **Importar la conexión existente**
 
-## 💾 Ejemplo de uso
+````php
+   require_once("1_conexion.php");
+````
 
-Seleccione una opción: 1
-Introduce el título de la tarea: Estudiar PHP
-Introduce la Descripcion: Tarea de PHP
-Introduce la Fecha: 2025-10-19
-Completada : 1 si / 0 no
-Tarea creada correctamente.
+Se reutiliza la conexión creada en 1_conexion.php para operar sobre la base de datos tareas_db.
 
-- Seleccione una opción: 2
-ID | Título        | Descripcion | Fecha | Completada
------------------------------------------------------
-1  | Estudiar PHP  | Tarea de PHP| 2025-10-19 | 1
+2 **Definición de la tabla tareas**
 
----
+````php
+    $sql_table = "CREATE TABLE IF NOT EXISTS tareas (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        titulo VARCHAR(100) NOT NULL,
+        descripcion VARCHAR(255),
+        fecha_caducidad DATE,
+        completada BOOLEAN DEFAULT FALSE
+    )";
+````
 
-## 🧱 Estructura de la base de datos
+- id: Clave primaria autoincremental.
+- titulo: Texto obligatorio (hasta 100 caracteres).
+- descripcion: Texto opcional (hasta 255 caracteres).
+- fecha_caducidad: Fecha límite de la tarea.
+- completada: Valor booleano (TRUE o FALSE) por defecto en FALSE.
 
-**Base de datos:** `tareas_db`
-**Tabla:** `tareas`
+3 **Creación de la tabla**
+La función create_table() ejecuta la consulta SQL:
 
-| Campo | Tipo | Descripción | Completada |
-|--------|------|-------------|
-| id | INT (AUTO_INCREMENT) | PRYMARY KEY |
-| titulo | VARCHAR(100) | Título de la tarea |
-| descripcion | VARCHAR(255) | Descripción o detalle |
-| fecha_creacion | DATE | Fecha |
-| completada | BOOLEAN |
+````php
+    function create_table($conn, $sql_table){
+    if($conn->query($sql_table))
+        return true;
+    else
+        return false;
+}
+````
 
----
+4 **Comprobación del resultado**
+La función showMessageTable() muestra el mensaje adecuado:
+
+````php
+    function showMessageTable($create_table, $conn){
+    if($create_table)
+        echo "✅ Tabla creada correctamente.\n";
+    else
+        echo "❌ ERROR: no se pudo realizar la operacion $conn->error \n";
+}
+````
+
+5 **Cierre de conexión**
+
+````php
+    $conn->close();
+````
 
 ## 🛡️ Buenas prácticas aplicadas
 
@@ -164,7 +237,7 @@ ID | Título        | Descripcion | Fecha | Completada
 
 ---
 
-## 🔧 Mejoras futuras
+## 🔧 Como se podría mejorar
 
 - Implementar **sentencias preparadas** con MySQLi para mejorar la seguridad.
 - Añadir validaciones de entrada en las operaciones de CRUD.
@@ -172,6 +245,7 @@ ID | Título        | Descripcion | Fecha | Completada
 - Exportar las tareas a **CSV** o **JSON**.
 - Incorporar un sistema de **usuarios y autenticación**.
 - Añadir un contador o estadísticas de tareas completadas.
+- Agregar una interfaz gráfica mas profesional como por ejemplo un index.html
 
 ---
 
