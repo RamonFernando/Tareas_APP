@@ -231,10 +231,10 @@ El archivo `2_crear_db.php` realiza los siguientes pasos:
 ````
 
 **📝 3_crearTarea.php — Creación de nuevas tareas (Tareas_APP)**
-Este script forma parte del proyecto **Tareas_APP**, una aplicación de gestión de tareas en PHP.
-Su objetivo es **insertar nuevas tareas en la base de datos `tareas_db`**, usando **sentencias preparadas** para prevenir inyecciones SQL.
+Este script forma parte del proyecto `Tareas_APP`, una aplicación de gestión de tareas en PHP.
+Su **objetivo** es **insertar nuevas tareas en la base de datos `tareas_db`**, usando **sentencias preparadas** para prevenir inyecciones SQL.
 
-El archivo `3_crearTarea.php` define una función que crea tareas mediante una interacción por consola:
+El archivo `3_crearTarea.php` define una función que **crea tareas** mediante una interacción por consola:
 
 1 **Inclusión del archivo principal**
 
@@ -294,6 +294,99 @@ El archivo `3_crearTarea.php` define una función que crea tareas mediante una i
         ? "✅  Tarea creada correctamente.\n"
         : "❌  ERROR: no se pudo crear la tarea.\n";
     $sql->close(); // Cierre de la conexion
+````
+
+**📋 4.1_leerTareas.php — Lectura y listado de tareas (Tareas_APP)**
+El archivo `4.1_leerTareas.php` forma parte del proyecto `Tareas_APP`, una aplicación por consola desarrollada en PHP que implementa un sistema **CRUD** completo para la gestión de tareas.
+
+Su **propósito** principal es **leer todas las tareas almacenadas en la base de datos tareas_db y mostrarlas** de forma ordenada en la consola.
+Además, devuelve los resultados como un array asociativo, lo que permite reutilizar la información en otras partes del programa (por ejemplo, para exportar, buscar o filtrar tareas).
+
+1 **Inclusión del archivo principal**
+
+- Se importa el archivo includes.php, que contiene la conexión activa a la base de datos mediante la extensión MySQLi.
+
+````php
+    require_once("includes.php");
+````
+
+2 **Definición de la función readTask()**
+
+- El uso de la palabra clave **global** permite acceder a la conexión **$conn** establecida previamente.
+
+````php
+    function readTask(){
+        global $conn;
+    }
+````
+
+3 **Ejecución de la consulta SQL**
+
+- Se **seleccionan** todas las tareas almacenadas en la `tabla tareas`, ordenadas por su identificador **(id)** de manera ascendente.
+
+````php
+    $sql = $conn->query("SELECT * FROM tareas ORDER BY id ASC");
+````
+
+4 **Control de errores de consulta**
+
+- Si la **consulta SQL falla**, se muestra un **mensaje** de error y la función devuelve un array vacío.
+  
+````php
+    if(!$sql) {
+        echo "❌  ERROR en la consulta $conn->error";
+        return [];
+    };
+````
+
+5 **Almacenamiento de resultados**
+
+- Se **recorre** el resultado con fetch_assoc() para obtener cada fila como un **array asociativo** y se **guardan** todas las tareas en **$tasks**.
+- Si la tabla `tareas` está vacía, se **informa** al usuario y se devuelve un array vacío.
+
+````php
+    while($row = $sql->fetch_assoc())
+    $tasks[] = $row;
+
+    if(empty($tasks)){
+    echo "⚠️  No hay tareas registradas";
+    return [];
+}
+````
+
+6 **Visualización de resultados en consola**
+
+- Usamos un foreach donde se **muestran las tareas** con formato visual claro, usando emojis para facilitar la lectura.
+
+````php
+    foreach($tasks as $task){
+        echo "------------------------------\n";
+        echo "🆔 Id: " . $task['id'] . "\n";
+        echo "📌 Título: " . $task['titulo'] . "\n";
+        echo "📝 Descripción: " . $task['descripcion'] . "\n";
+        echo "📅 Fecha: " . $task['fecha_caducidad'] . "\n";
+        echo "📊 Completada: " . $task['completada'] . "\n";
+    }
+````
+
+7 **Retorno del resultado**
+
+- Finalmente, la **función devuelve el array** completo de `tareas` para su posible reutilización.
+
+````php
+    return $tasks;
+````
+
+> Ejemplo de salida de consola:
+
+````php
+    ------------------------------
+    🆔 Id: 1
+    📌 Título: Estudiar PHP
+    📝 Descripción: Repasar funciones y POO
+    📅 Fecha: 2025-10-25
+    📊 Completada: 0
+    ------------------------------
 ````
 
 ## 🛡️ Buenas prácticas aplicadas

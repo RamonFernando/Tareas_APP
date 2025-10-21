@@ -1,5 +1,10 @@
 <?php
 require_once("includes.php");
+
+/*
+    La función devuelve un array asociativo con todas las tareas almacenadas.
+    Si no hay tareas o se produce un error, devuelve un array vacío.
+*/
 function readTask(){
         
         global $conn;
