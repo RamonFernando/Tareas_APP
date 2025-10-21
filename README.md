@@ -377,7 +377,7 @@ Además, devuelve los resultados como un array asociativo, lo que permite reutil
     return $tasks;
 ````
 
-> Ejemplo de salida de consola:
+💻 **Ejemplo de salida de consola**
 
 ````php
     ------------------------------
@@ -556,8 +556,8 @@ Su objetivo es **eliminar una tarea existente de la tabla `tareas`**, tras una c
 
 ````php
     echo ($sql->affected_rows > 0)
-    ? "✅  Tarea eliminada correctamente\n"
-    : "⚠️  Tarea no encontrada o ya eliminada\n";
+        ? "✅  Tarea eliminada correctamente\n"
+        : "⚠️  Tarea no encontrada o ya eliminada\n";
 ````
 
 2.5 **La conexión se cierra**
@@ -569,14 +569,187 @@ Su objetivo es **eliminar una tarea existente de la tabla `tareas`**, tras una c
     return $result;
 ````
 
-**Ejemplo de ejecución en consola**
-Ejemplo en consola que muestra una consulta cuyo ID no se encontró.
+💻 **Ejemplo de ejecución en consola**
+
+- Ejemplo en consola que muestra una consulta cuyo ID no se encontró.
 
 ````bash
     ¿Estás seguro de que deseas eliminar la tarea con ID 4? (s/n): n
     ❌  Eliminación cancelada.
 
     ⚠️  No se encontró la tarea con ID 99.
+````
+
+**🔍 4.4_buscarTareas.php — Búsqueda avanzada de tareas (Tareas_APP)**
+El archivo **4.4_buscarTareas.php** pertenece al proyecto `Tareas_APP`, una aplicación desarrollada en PHP por consola que gestiona tareas mediante operaciones CRUD sobre una base de datos MySQL.
+Su **función principal es buscar tareas según distintos criterios**, ofreciendo un menú interactivo en la terminal.
+Esta funcionalidad amplía las capacidades del sistema permitiendo consultas dinámicas por:
+
+- ID
+- Título (búsqueda parcial con LIKE)
+- Fecha de caducidad (por año, mes o día)
+- Estado de completada o pendiente
+
+1 **Inclusión del archivo principal**
+
+- Se importa el archivo includes.php, que contiene la **conexión** activa a la base de datos mediante la **extensión MySQLi**.
+
+````php
+    require_once("includes.php");
+````
+
+2 **Definición de la función searchTask()**
+
+- Esta función **despliega un menú interactivo** para que el usuario seleccione el tipo de búsqueda que desea realizar.
+
+````php
+    function searchTask() {
+    global $conn;
+````
+
+3 **Menú principal del buscador**
+
+- El usuario **introduce un número del 1 al 5** para seleccionar la operación deseada.
+
+````php
+    echo "\n=========================\n";
+    echo " 🔍 BUSCADOR DE TAREAS\n";
+    echo "=========================\n";
+    echo "1. 🆔 Buscar por ID\n";
+    echo "2. 📌 Buscar por Título\n";
+    echo "3. 📅 Buscar por Fecha de caducidad\n";
+    echo "4. 📊 Buscar por Estado (completada o no)\n";
+    echo "5. ↩️  Volver al menú principal\n";
+    echo "👉  Seleccione una opción: ";
+````
+
+🔸 **Caso 1: Buscar por ID**
+
+- Permite **localizar una tarea** exacta a partir de su **identificador numérico (ID)**.
+- El resultado se muestra mediante la función auxiliar displayData().
+
+````php
+    $id = intval(trim(fgets(STDIN)));
+    $task = getTaskById($id);
+    if ($task)
+        displayData([$task]);
+    else
+        echo "\n⚠️  No se encontró ninguna tarea con el ID $id.\n";
+````
+
+🔸 **Caso 2: Buscar por título (LIKE)**
+
+- Permite realizar una **búsqueda parcial del título**, sin distinguir mayúsculas/minúsculas, usando comodines SQL.
+- La función likeParam() genera una cadena segura para búsquedas con LIKE.
+- Se muestran los resultados y el número total de coincidencias.
+
+````php
+    function likeParam($param) {
+        $param = trim($param);
+        $param = addcslashes($param, '%_');
+        $param = strtolower($param);
+        return "%$param%";
+    }
+
+    $sql = $conn->prepare("SELECT * FROM tareas WHERE LOWER(titulo) LIKE ?");
+    $param = likeParam($titulo);
+    $sql->bind_param("s", $param);
+````
+
+🔸 **Caso 3: Buscar por fecha de caducidad**
+
+- El programa admite tres formatos distintos de búsqueda:
+| Formato introducido | Interpretación
+| Ejemplo
+| ----------- | -------------------------------------------------------- | ------------|
+| `YYYY-MM-DD`| Muestra tareas con fecha anterior o igual a la ingresada |`2025-10-19` |
+| `YYYY-MM`   | Muestra tareas con fecha dentro de ese mes               | `2025-10`   |
+| `YYYY`      | Muestra tareas de todo ese año                           | `2025`      |
+- El código detecta automáticamente el formato mediante expresiones regulares:
+- Luego ejecuta la consulta correspondiente con prepare() y bind_param().
+
+````php
+    $fullDate = preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha);
+    $yearAndMonth = preg_match('/^\d{4}-\d{2}$/', $fecha);
+    $yearDate = preg_match('/^\d{4}$/', $fecha);
+````
+
+🔸 **Caso 4: Buscar por estado (completada o no)**
+
+- Permite filtrar tareas según su estado lógico:
+
+1 → ✅ completada
+0 → ❌ pendiente
+
+- El resultado incluye el total de tareas encontradas según el filtro seleccionado.
+
+````php
+    echo "¿Desea ver tareas completadas (1)✅ o no completadas (0)❌?: ";
+    $completada = trim(fgets(STDIN));
+
+    $sql = $conn->prepare("SELECT * FROM tareas WHERE completada = ?");
+    $sql->bind_param("i", $completada);
+    $sql->execute();
+````
+
+🔸 **Caso 5: Volver al menú principal**
+
+- Permite regresar al archivo index.php (menú principal del programa).
+
+````php
+    case 5:
+        echo "↩️  Volviendo al menú principal...\n";
+        return;
+````
+
+📋 **Función auxiliar displayData()**
+
+- Para mantener coherencia visual con la función readTask(), displayData() **muestra los resultados** de forma organizada:
+
+````php
+    function displayData(array $tasks) {
+        if (empty($tasks)) {
+            echo "⚠️  No se encontraron tareas que coincidan con la búsqueda.\n";
+            return;
+        }
+
+        echo "\n📋 Resultados encontrados:\n";
+        foreach ($tasks as $task) {
+            echo "------------------------------\n";
+            echo "🆔 Id: " . $task['id'] . "\n";
+            echo "📌 Título: " . $task['titulo'] . "\n";
+            echo "📝 Descripción: " . $task['descripcion'] . "\n";
+            echo "📅 Fecha: " . $task['fecha_caducidad'] . "\n";
+            echo "📊 Completada: " . $task['completada'] . "\n";
+        }
+    }
+
+````
+
+💻 **Ejemplo de ejecución en consola**
+
+- Mostramos el resultado de una busqueda.
+  
+````php
+    =========================
+    🔍 BUSCADOR DE TAREAS
+    =========================
+    1. 🆔 Buscar por ID
+    2. 📌 Buscar por Título
+    3. 📅 Buscar por Fecha de caducidad
+    4. 📊 Buscar por Estado (completada o no)
+    5. ↩️  Volver al menú principal
+    👉  Seleccione una opción: 2
+    Ingrese el título o parte del título: PHP
+    📋 Resultados encontrados:
+    ------------------------------
+    🆔 Id: 1
+    📌 Título: Estudiar PHP
+    📝 Descripción: Repasar funciones y POO
+    📅 Fecha: 2025-10-25
+    📊 Completada: 0
+
+    ✅ Se han encontrado 1 coincidencias.
 ````
 
 ## 🛡️ Buenas prácticas aplicadas
