@@ -6,7 +6,7 @@
         
         global $conn;
         
-        // 1. Preparamos la consulta para evitar inyeccion de codigo en la BD
+        // 1. Preparamos la consulta para evitar inyeccion de codigo en la BD.
         $sql = $conn->prepare("INSERT INTO tareas (titulo, descripcion, fecha_caducidad) values (?, ?, ?)");
         
         // 2. Enlazamos los parámetros ("sss" = string, string, string), si fuera un entero "i" = integer
