@@ -106,12 +106,11 @@ A continuacion explicacion del proyecto archivo por archivo.
 Este script PHP forma parte del proyecto **Tareas_APP**, una aplicación de gestión de tareas desarrollada en PHP como práctica del módulo **Entorno Servidor (DAW)**.
 Su función principal es **establecer la conexión con MySQL** y **crear la base de datos `tareas_db`** si aún no existe.
 
----
-
-El archivo `1_conexion.php` realiza los siguientes pasos:
+> El archivo `1_conexion.php` realiza los siguientes pasos:
 
 1 **Definición de variables de entorno**
-   Configura los datos básicos de conexión:
+
+- Configura los datos básicos de conexión:
 
 ````php
    $servername = "localhost";
@@ -120,15 +119,17 @@ El archivo `1_conexion.php` realiza los siguientes pasos:
 ````
 
 2 **Creación de la conexión**
-Se establece la conexión con el servidor MySQL mediante la extensión MySQLi:
+
+- Se establece la conexión con el servidor MySQL mediante la extensión MySQLi:
 
 ````php
 $conn = new mysqli($servername, $username, $password);
 ````
 
 3 **Verificación de conexión**
-Comprueba si la conexión se ha realizado correctamente.
-En caso de error, el programa finaliza mostrando el mensaje correspondiente:
+
+- Comprueba si la conexión se ha realizado correctamente.
+- En caso de error, el programa finaliza mostrando el mensaje correspondiente:
 
 ````php
 if($conn->connect_error)
@@ -136,16 +137,17 @@ if($conn->connect_error)
 ````
 
 4 **Creación de la base de datos**
-Si la base de datos tareas_db no existe, se crea automáticamente:
+
+- Si la base de datos tareas_db no existe, se crea automáticamente:
+- La función create_db() ejecuta dicha consulta y devuelve true o false según el resultado.
 
 ````php
 $sql_db = "CREATE DATABASE IF NOT EXISTS tareas_db";>
 ````
 
-La función create_db() ejecuta dicha consulta y devuelve true o false según el resultado.
-
 5 **Mostrar mensaje de resultado**
-Se utiliza una función separada para mostrar mensajes al usuario, informando del éxito o fallo de la operación:
+
+- Se utiliza una función separada para mostrar mensajes al usuario, informando del éxito o fallo de la operación:
 
 ````php
 function showMessageDB($created_db, $conn): void {
@@ -157,7 +159,8 @@ function showMessageDB($created_db, $conn): void {
 ````
 
 6 **Selección de la base de datos**
-Finalmente, se selecciona la base de datos creada para continuar con el resto del proyecto:
+
+- Finalmente, se selecciona la base de datos creada para continuar con el resto del proyecto:
 
 ````php
 $conn->select_db("tareas_db");
@@ -171,11 +174,11 @@ El archivo `2_crear_db.php` realiza los siguientes pasos:
 
 1 **Importar la conexión existente**
 
+- Se reutiliza la conexión creada en 1_conexion.php para operar sobre la base de datos tareas_db.
+
 ````php
    require_once("1_conexion.php");
 ````
-
-Se reutiliza la conexión creada en 1_conexion.php para operar sobre la base de datos tareas_db.
 
 2 **Definición de la tabla tareas**
 
@@ -196,7 +199,8 @@ Se reutiliza la conexión creada en 1_conexion.php para operar sobre la base de 
 - completada: Valor booleano (TRUE o FALSE) por defecto en FALSE.
 
 3 **Creación de la tabla**
-La función create_table() ejecuta la consulta SQL:
+
+- La función create_table() ejecuta la consulta SQL:
 
 ````php
     function create_table($conn, $sql_table){
@@ -208,7 +212,8 @@ La función create_table() ejecuta la consulta SQL:
 ````
 
 4 **Comprobación del resultado**
-La función showMessageTable() muestra el mensaje adecuado:
+
+- La función showMessageTable() muestra el mensaje adecuado:
 
 ````php
     function showMessageTable($create_table, $conn){
@@ -223,6 +228,72 @@ La función showMessageTable() muestra el mensaje adecuado:
 
 ````php
     $conn->close();
+````
+
+**📝 3_crearTarea.php — Creación de nuevas tareas (Tareas_APP)**
+Este script forma parte del proyecto **Tareas_APP**, una aplicación de gestión de tareas en PHP.
+Su objetivo es **insertar nuevas tareas en la base de datos `tareas_db`**, usando **sentencias preparadas** para prevenir inyecciones SQL.
+
+El archivo `3_crearTarea.php` define una función que crea tareas mediante una interacción por consola:
+
+1 **Inclusión del archivo principal**
+
+- El archivo includes.php contiene la conexión activa a la base de datos ($conn).
+
+````php
+    require_once("includes.php");
+````
+
+2 **Definición de la función createTask()**
+
+- Parámetros:
+- $titulo: título de la tarea (string).
+- $descripcion: descripción corta (string).
+- $fecha_caducidad: fecha límite (string en formato YYYY-MM-DD).
+- Tipo devuelto: bool|mysqli_result (retorna true si la inserción fue exitosa).
+
+````php
+    function createTask($titulo, $descripcion, $fecha_caducidad): bool|mysqli_result {
+        global $conn;
+    }
+````
+
+3 **Preparación de la consulta (seguridad SQL) y enlace de parametros**
+
+- Se usa una sentencia preparada para proteger la base de datos frente a ataques de inyección SQL
+- "sss" indica que los tres valores son strings.
+- Si alguno fuera numérico, se usaría "i" (integer), "d" (double) o "b" (blob).
+
+````php
+    $sql = $conn->prepare("INSERT INTO tareas (titulo, descripcion, fecha_caducidad) VALUES (?, ?, ?)");
+    $sql->bind_param("sss", $titulo, $descripcion, $fecha_caducidad);
+````
+
+4 **Entrada de datos desde consola**
+
+- El programa solicita los valores al usuario directamente en la terminal.
+
+````php
+    echo "Título: ";
+    $titulo = trim(fgets(STDIN));
+
+    echo "Descripción: ";
+    $descripcion = trim(fgets(STDIN));
+
+    echo "Fecha (YYYY-MM-DD): ";
+    $fecha_caducidad = trim(fgets(STDIN));
+````
+
+5 **Ejecución e informe del resultado**
+
+- Se ejecuta la sentencia preparada y se muestra un mensaje de confirmación o error.
+
+````php
+    $result = $sql->execute();
+    echo $result
+        ? "✅  Tarea creada correctamente.\n"
+        : "❌  ERROR: no se pudo crear la tarea.\n";
+    $sql->close(); // Cierre de la conexion
 ````
 
 ## 🛡️ Buenas prácticas aplicadas
