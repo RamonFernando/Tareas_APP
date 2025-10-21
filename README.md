@@ -409,7 +409,7 @@ Su propósito es **actualizar los datos de una tarea existente** en la base de d
 ````php
     function updateTask($id){
         global $conn;
-    }
+    
 ````
 
 2.1 **Obtención de la tarea actual**
@@ -487,6 +487,96 @@ Su propósito es **actualizar los datos de una tarea existente** en la base de d
 
     $sql->close();
     return $result;
+````
+
+**🗑️ 4.3_eliminarTarea.php — Eliminación de tareas (`Tareas_APP`)**
+El archivo `4.3_eliminarTarea.php` forma parte del proyecto `Tareas_APP`, una aplicación de consola desarrollada en PHP que implementa un sistema **CRUD** completo sobre la base de datos `tareas_db`.
+Su objetivo es **eliminar una tarea existente de la tabla `tareas`**, tras una confirmación por parte del usuario, utilizando sentencias preparadas (MySQLi) para garantizar la seguridad y evitar inyecciones SQL.
+
+1 **Inclusión del archivo principal**
+
+- Se importa el archivo includes.php, que contiene la **conexión** activa a la base de datos mediante la **extensión MySQLi**.
+
+````php
+    require_once("includes.php");
+````
+
+2 **Definición de la función deleteTask()**
+
+- Parámetro: $id → identificador de la tarea que se desea eliminar.
+- Tipo de retorno: **bool** → true si la tarea se elimina correctamente, false en caso contrario.
+
+````php
+    function deleteTask($id){
+        global $conn;
+````
+
+2.1 **Verificación de la existencia de la tarea**
+
+- Antes de intentar eliminar, el programa **comprueba que la tarea realmente exista** en la base de datos mediante la función getTaskById($id).
+- Esto evita ejecutar una eliminación sobre un ID inexistente.
+
+````php
+    $task = getTaskById($id);
+    if (!$task) {
+        echo "⚠️  No se encontró la tarea con ID $id.\n";
+        return false;
+    }
+````
+
+2.2 **Confirmación del usuario**
+
+- Por seguridad, el sistema **solicita confirmación** antes de proceder con la eliminación:
+- De este modo, el usuario puede cancelar la operación **escribiendo** cualquier letra diferente de **“s”**.
+
+````php
+    echo "¿Estás seguro de que deseas eliminar la tarea con ID $id? (s/n): ";
+    $answer = trim(fgets(STDIN));
+
+    if (strtolower($answer) !== 's') {
+        echo "❌  Eliminación cancelada.\n";
+        return false;
+    }
+````
+
+2.3 **Ejecución de la sentencia SQL preparada**
+
+- Si el **usuario confirma**, se **ejecuta una sentencia preparada DELETE**, con un parámetro entero (i), para eliminar de forma segura la tarea indicada.
+- El uso de prepare() y bind_param() asegura que el valor recibido se procese correctamente, previniendo inyección SQL.
+
+````php
+    $sql = $conn->prepare("DELETE FROM tareas WHERE id = ?");
+    $sql->bind_param("i", $id);
+    $result = $sql->execute();
+````
+
+2.4 **Verificación del resultado**
+
+- Tras **ejecutar la consulta**, el sistema **informa** si la tarea fue eliminada correctamente o si no se encontró el registro.
+
+````php
+    echo ($sql->affected_rows > 0)
+    ? "✅  Tarea eliminada correctamente\n"
+    : "⚠️  Tarea no encontrada o ya eliminada\n";
+````
+
+2.5 **La conexión se cierra**
+
+- La conexión preparada se cierra automaticamente después y se devuelve el resultado de la consulta.
+
+````php
+    $sql->close();
+    return $result;
+````
+
+**Ejemplo de ejecución en consola**
+Ejemplo en consola que muestra una consulta cuyo ID no se encontró.
+
+````bash
+    ¿Estás seguro de que deseas eliminar la tarea con ID 4? (s/n): n
+    ❌  Eliminación cancelada.
+
+    ⚠️  No se encontró la tarea con ID 99.
 ````
 
 ## 🛡️ Buenas prácticas aplicadas
