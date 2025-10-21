@@ -2,6 +2,17 @@
     require_once("includes.php");
 
     // Create
+    /**
+     * Summary of createTask
+     * crear una nueva tarea
+     * @global $conn
+     * @param mixed $titulo
+     * @param mixed $descripcion
+     * @param mixed $fecha_caducidad
+     * @return bool
+     * retorno: Parámetros: $titulo, $descripcion, $fecha_caducidad
+     * Devuelve true si la tarea se crea correctamente, false en caso contrario
+     */
     function createTask($titulo,$descripcion, $fecha_caducidad): bool|mysqli_result{
         
         global $conn;

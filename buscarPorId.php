@@ -1,6 +1,11 @@
 <?php
-// Busca la consulta por el id
-    // Devuelve un array asociativo de la consulta o null sino existe
+    // Busca la consulta por el id
+    /**
+     * Summary of getTaskById
+     * @param mixed $id
+     * @return array|bool|null
+     * retorno: Devuelve un array asociativo de la consulta o null si esta vacia
+     */
     function getTaskById($id): ?array {
         global $conn;
         $sql = $conn->prepare("SELECT * FROM tareas WHERE id = ?");
@@ -12,6 +17,6 @@
         $task = $result->fetch_assoc();
 
         $sql->close();
-        return $task ?: null; // Devuelve un array con la consulta o null si esta vacia
+        return $task ?: null; // Retorna el array o null
     }
 ?>

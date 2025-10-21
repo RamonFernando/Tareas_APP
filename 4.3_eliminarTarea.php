@@ -2,6 +2,15 @@
 require_once("includes.php");
 
  // Delete
+    /**
+     * Summary of deleteTask
+     * Elimina una tarea de la base de datos
+     * @global $conn
+     * @param mixed $id
+     * @return bool
+     * retorno: Parámetro: $id → identificador de la tarea que se desea eliminar.
+     * Devuelve true si la tarea se elimina correctamente, false en caso contrario
+     */
     function deleteTask($id){
         global $conn;
         // Verificar si la tarea existe

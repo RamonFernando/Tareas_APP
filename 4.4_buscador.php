@@ -2,6 +2,18 @@
 require_once("includes.php");
 
 // Busca los datos por id, titulo, fecha o Estado de la tarea
+/**
+ * Summary of searchTask
+ * @return void
+ * retorno: Muestra el menu de busqueda de tareas
+ * Busquea por ID: Busca una tarea por su ID
+ * Busquea por Título: Busca una tarea por su título
+ * Busquea por Fecha de caducidad: Busca una tarea:
+ *  - por año-mes-día (YYYY-MM-DD) anterior a la fecha ingresada
+ *  - por año-mes (YYYY-MM-DD) posterior
+ *  - por año (YYYY)
+ * Busquea por Estado (completada o no): Busca una tarea por su estado
+ */
 function searchTask() {
     global $conn;
 

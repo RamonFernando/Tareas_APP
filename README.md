@@ -304,7 +304,7 @@ Además, devuelve los resultados como un array asociativo, lo que permite reutil
 
 1 **Inclusión del archivo principal**
 
-- Se importa el archivo includes.php, que contiene la conexión activa a la base de datos mediante la extensión MySQLi.
+- Se importa el archivo includes.php, que contiene la **conexión** activa a la base de datos mediante la **extensión MySQLi**.
 
 ````php
     require_once("includes.php");
@@ -387,6 +387,106 @@ Además, devuelve los resultados como un array asociativo, lo que permite reutil
     📅 Fecha: 2025-10-25
     📊 Completada: 0
     ------------------------------
+````
+
+**🛠️ 4.2_actualizarTareas.php — Actualización de tareas (Tareas_APP)**
+El archivo **4.2_actualizarTareas.php** forma parte del proyecto `Tareas_APP`, desarrollado en PHP como aplicación de consola para la gestión de tareas.
+Su propósito es **actualizar los datos de una tarea existente** en la base de datos `tareas_db`, utilizando sentencias preparadas con MySQLi para garantizar la seguridad y evitar inyecciones SQL.
+
+1 **Inclusión del archivo principal**
+
+- Se importa el archivo includes.php, que contiene la **conexión** activa a la base de datos mediante la **extensión MySQLi**.
+
+````php
+    require_once("includes.php");
+````
+
+2 **Definición de la función updateTask()**
+
+- Parámetro: $id → identificador de la tarea que se desea modificar.
+- Tipo de retorno: **bool** → true si la actualización fue exitosa, false en caso contrario.
+
+````php
+    function updateTask($id){
+        global $conn;
+    }
+````
+
+2.1 **Obtención de la tarea actual**
+
+- Antes de modificar, se recuperan los datos originales mediante la función getTaskById($id).
+- Esto permite mostrar los valores actuales al usuario para que decida cuáles cambiar.
+
+````php
+    $task = getTaskById($id);
+    if(!$task) {
+        echo "⚠️  No se encontro la tarea con Id $id";
+        return false;
+    }
+````
+
+2.2 **Entrada de datos por consola**
+
+- El usuario puede dejar un campo vacío si no desea modificarlo.
+- El programa tomará entonces el valor anterior por defecto.
+- El mismo proceso se repite para descripción, fecha y estado de completada.
+
+````php
+    echo "Título actual:" . $task['titulo'] . "\nNuevo título: ";
+    $titulo = trim(fgets(STDIN));
+    if ($titulo === '') $titulo = $task['titulo'];
+    echo "Descripción actual:" . $task['descripcion'] . "\nNueva descripción: ";
+    $descripcion = trim(fgets(STDIN));
+    if ($descripcion === '') $descripcion = $task['descripcion'];
+
+    echo "Fecha actual: " . $task['fecha_caducidad'] . "\nNueva fecha (YYYY-MM-DD): ";
+    $fecha = trim(fgets(STDIN));
+    if ($fecha === '') $fecha = $task['fecha_caducidad'];
+
+    echo "Completada actualmente (1 = sí✅, 0 = no❌): " . $task['completada'] . "\nNuevo valor (1 o 0): ";
+    $completada_task = trim(fgets(STDIN));
+    ($completada_task === '')
+        ? $completada = $task['completada']
+        : $completada = intval($completada_task);
+````
+
+2.3 **Confirmación antes de aplicar cambios**
+
+- Por seguridad, el usuario debe confirmar si desea realizar la actualización:
+
+````php
+    echo "¿Estás seguro de que deseas actualizar la tarea con ID $id? (s/n): ";
+    $answer = trim(fgets(STDIN));
+
+    if (strtolower($answer) !== 's') {
+        echo "❌ Actualización cancelada.\n";
+        return false;
+    }
+````
+
+2.4 **Ejecución de la sentencia SQL preparada**
+
+- Se **actualizan** los campos de la tarea usando una sentencia preparada con **bind_param()** para evitar inyecciones SQL.
+
+````php
+    $sql = $conn->prepare("UPDATE tareas SET titulo = ?, descripcion = ?,
+        fecha_caducidad = ?, completada = ? WHERE id = ?");
+    $sql->bind_param("sssii", $titulo, $descripcion, $fecha, $completada, $id);
+    $result = $sql->execute();
+````
+
+2.5 **Verificación del resultado**
+
+- Se comprueba si la operación afectó alguna fila, mostrando el mensaje correspondiente.
+- Finalmente, se cierra la consulta y se devuelve el resultado.
+  
+````php
+    echo ($sql->affected_rows > 0)
+    ? "✅  Actualización realizada correctamente\n"
+    : "⚠️  No se encontró el id: ($id) o ha ocurrido un error al actualizar.\n";
+
+    $sql->close();
+    return $result;
 ````
 
 ## 🛡️ Buenas prácticas aplicadas

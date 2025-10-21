@@ -1,6 +1,15 @@
 <?php
 require_once("includes.php");
 // Update
+    /**
+     * Summary of updateTask
+     * Actualiza una tarea en la base de datos
+     * @global $conn
+     * @param mixed $id
+     * @return bool
+     * retorno: Parámetro: $id → identificador de la tarea que se desea modificar.
+     * Tipo de retorno: bool → true si la actualización fue exitosa, false en caso contrario.
+     */
     function updateTask($id){
         global $conn;
         
