@@ -1002,6 +1002,56 @@ Su diseño modular permite **reutilizar la misma consulta SQL en todo el program
  |⚠️ Tarea no encontrada  |null          |No existe ningún registro con ese ID
  |❌ Error SQL (raro)     |null          |Si la ejecución falla, devuelve null
 
+---
+
+🧩 **4.7_includes_crud.php — Importación de módulos CRUD (Tareas_APP)**
+
+El archivo 4.7_includes_crud.php actúa como núcleo integrador del proyecto `Tareas_APP`, una aplicación en PHP por consola que implementa un sistema completo CRUD (Create, Read, Update, Delete) sobre una base de datos MySQL.
+
+Su objetivo principal es **unificar todas las funcionalidades de gestión de tareas en un único punto de acceso**, facilitando su inclusión desde el archivo principal index.php o desde otros scripts del proyecto.
+
+Este archivo no ejecuta directamente ninguna operación, sino que **carga las funciones** necesarias para que otras partes del programa (como el menú principal o scripts automatizados) puedan utilizarlas.
+
+Cada **require_once() enlaza un módulo PHP** que implementa una parte específica del CRUD y el buscador avanzado.
+
+````php
+    require_once("3_crearTarea.php");
+    require_once("4.1_leerTareas.php");
+    require_once("4.2_actualizarTarea.php");
+    require_once("4.3_eliminarTarea.php");
+    require_once("buscarPorId.php");
+    require_once("4.4_buscador.php");
+````
+
+📂 Archivos incluidos
+📂 Archivo                | Función principal |Descripción
+> 3_crearTarea.php        |➕ Crear           |Inserta nuevas tareas en la base de datos. Utiliza sentencias preparadas y entrada por consola.
+> 4.1_leerTareas.php      |📋 Leer            |Muestra todas las tareas registradas. Imprime en consola y devuelve un array asociativo.
+> 4.2_actualizarTarea.php | 🛠️ Actualizar     |Modifica el contenido de una tarea existente. Solicita confirmación antes de guardar cambios.
+> 4.3_eliminarTarea.php   | 🗑️ Eliminar       | Borra una tarea de la base de datos, con verificación previa del ID y confirmación de usuario.
+> buscarPorId.php         | 🔎 Buscar por ID  | Consulta individual para obtener una tarea específica a partir de su identificador.
+> 4.4_buscador.php        | 🔍 Buscador avanzado |Permite búsquedas por ID, título, fecha o estado (completada / pendiente).
+
+💡 **Ventajas de usar un archivo integrador**
+
+🔸Modularidad total:
+Todos los componentes del CRUD se mantienen separados, mejorando la organización y la lectura del código.
+
+🔸Reutilización:
+Cualquier script puede acceder a todas las funciones CRUD importando este único archivo.
+
+🔸Evita errores de inclusión múltiple:
+Gracias a require_once(), se asegura que cada módulo se cargue solo una vez, evitando conflictos.
+
+🔸Mantenimiento centralizado:
+Si se agrega un nuevo módulo (por ejemplo, exportar tareas o estadísticas), basta con añadir su require_once() aquí.
+
+📤 Comportamiento general
+
+- No devuelve valores por sí mismo.
+- Su función es asegurar la disponibilidad de todas las operaciones CRUD dentro del flujo de ejecución del programa.
+- Sirve como punto intermedio entre el menú principal (index.php) y las funciones especializadas.
+
 ## 🛡️ Buenas prácticas aplicadas
 
 - Uso de **MySQLi** para la conexión y consultas a la base de datos.
