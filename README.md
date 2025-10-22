@@ -168,6 +168,26 @@ function showMessageDB($created_db, $conn): void {
 $conn->select_db("tareas_db");
 ````
 
+📤 Valor de retorno
+
+- Devuelve un array asociativo con todas las filas obtenidas de la tabla tareas.
+- En caso de error o si no existen tareas, devuelve un array vacío.
+
+- Ejemplo de valor de retorno:
+
+````php
+    [
+        [
+            "id" => 1,
+            "titulo" => "Estudiar PHP",
+            "descripcion" => "Repasar funciones y POO",
+            "fecha_caducidad" => "2025-10-25",
+            "completada" => 0
+        ],
+    ...
+    ]
+````
+
 ---
 
 **🧱 2_crear_db.php — Creación de la Tabla `tareas` (Tareas_APP)**
@@ -275,22 +295,7 @@ El archivo `3_crearTarea.php` define una función que **crea tareas** mediante u
     $sql->bind_param("sss", $titulo, $descripcion, $fecha_caducidad);
 ````
 
-4 **Entrada de datos desde consola**
-
-- El programa solicita los valores al usuario directamente en la terminal.
-
-````php
-    echo "Título: ";
-    $titulo = trim(fgets(STDIN));
-
-    echo "Descripción: ";
-    $descripcion = trim(fgets(STDIN));
-
-    echo "Fecha (YYYY-MM-DD): ";
-    $fecha_caducidad = trim(fgets(STDIN));
-````
-
-5 **Ejecución e informe del resultado**
+4 **Ejecución e informe del resultado**
 
 - Se ejecuta la sentencia preparada y se muestra un mensaje de confirmación o error.
 
@@ -300,6 +305,30 @@ El archivo `3_crearTarea.php` define una función que **crea tareas** mediante u
         ? "✅  Tarea creada correctamente.\n"
         : "❌  ERROR: no se pudo crear la tarea.\n";
     $sql->close(); // Cierre de la conexion
+````
+
+📤 Valor de retorno
+
+- Devuelve un valor booleano (true o false) indicando si la tabla tareas fue creada correctamente o no.
+- En caso de éxito, la función create_table() devuelve true y se muestra el mensaje:
+✅ Tabla creada correctamente.
+- Si ocurre un error durante la creación, devuelve false y muestra:
+❌ ERROR: no se pudo realizar la operación ...
+
+💻 **Ejemplo de salida de consola**
+
+- Salida esperada
+  
+````bash
+    bool(true)
+    ✅ Tabla creada correctamente.
+````
+
+- En caso de error
+
+````php
+    bool(false)
+    ❌ ERROR: no se pudo realizar la operacion Duplicate table 'tareas'
 ````
 
 ---
@@ -396,6 +425,11 @@ Además, devuelve los resultados como un array asociativo, lo que permite reutil
     📊 Completada: 0
     ------------------------------
 ````
+
+📤 Valor de retorno
+
+- Devuelve un array asociativo con todas las filas obtenidas de la tabla tareas.
+- Cada elemento del array representa una tarea individual, incluyendo sus campos id, titulo, descripcion, fecha_caducidad y completada.
 
 ---
 
@@ -499,6 +533,13 @@ Su propósito es **actualizar los datos de una tarea existente** en la base de d
     return $result;
 ````
 
+📤 Valor de retorno
+
+- Devuelve un valor booleano (true o false) que indica si la actualización de la tarea se realizó correctamente.
+- El parámetro $id representa el identificador único de la tarea que se desea modificar.
+- Si el usuario cancela la operación, no confirma la actualización o la tarea no existe, el valor retornado será false.
+- Si la actualización se realiza exitosamente, devuelve true y muestra un mensaje de confirmación.
+
 ---
 
 **🗑️ 4.3_eliminarTarea.php — Eliminación de tareas (`Tareas_APP`)**
@@ -591,6 +632,13 @@ Su objetivo es **eliminar una tarea existente de la tabla `tareas`**, tras una c
 
     ⚠️  No se encontró la tarea con ID 99.
 ````
+
+📤 Valor de retorno
+
+- Devuelve un valor booleano (true o false) que indica si la tarea fue eliminada correctamente de la base de datos.
+- El parámetro $id corresponde al identificador único de la tarea que se desea eliminar.
+- Si el usuario cancela la eliminación o la tarea no existe, la función devuelve false.
+- En caso de eliminación exitosa, devuelve true y muestra un mensaje de confirmación en consola.
 
 ---
 
@@ -1051,6 +1099,182 @@ Si se agrega un nuevo módulo (por ejemplo, exportar tareas o estadísticas), ba
 - No devuelve valores por sí mismo.
 - Su función es asegurar la disponibilidad de todas las operaciones CRUD dentro del flujo de ejecución del programa.
 - Sirve como punto intermedio entre el menú principal (index.php) y las funciones especializadas.
+
+---
+
+🏁 **index.php — Menú principal del sistema (Tareas_APP)**
+
+El archivo **index.php es el punto de entrada principal del proyecto `Tareas_APP`**, una aplicación en PHP (CLI) que permite gestionar tareas desde la consola mediante un sistema CRUD completo (Crear, Leer, Actualizar, Eliminar y Buscar).
+
+Este script es el encargado de **mostrar el menú principal, recibir la entrada del usuario, y llamar a las funciones CRUD correspondientes**, conectándose a la base de datos MySQL a través de los módulos previamente cargados.
+
+1 **Inclusión de dependencias**
+
+- Antes de ejecutar el menú, se incluyen los archivos necesarios para establecer la conexión a la base de datos y habilitar las funciones del CRUD.
+- 1_conexion.php → Crea o conecta con la base de datos tareas_db.
+- includes.php   → Carga todas las funciones CRUD (crear, leer, actualizar, eliminar, buscar).
+
+````php
+    require_once("1_conexion.php");
+    require_once("includes.php");
+````
+
+2 **Definición de la función mostrarMenu()**
+
+- La función mostrarMenu() imprime el menú principal del programa en consola, mostrando las distintas opciones disponibles para el usuario.
+- Cada opción está representada con un emoji identificativo para hacer la interfaz más clara y visual.
+
+````php
+    function mostrarMenu() {
+        echo "\n=========================\n";
+        echo " 📋 GESTOR DE TAREAS\n";
+        echo "=========================\n";
+        echo "1. 📜  Listar tareas\n";
+        echo "2. ✏️   Crear nueva tarea\n";
+        echo "3. 🛠️   Editar tarea\n";
+        echo "4. 🗑️   Eliminar tarea\n";
+        echo "5. 🔍  Buscar tarea\n";
+        echo "6. 🚪  Salir\n";
+        echo "👉  Seleccione una opción: ";
+    }
+````
+
+3 **Bucle principal de ejecución**
+
+- El programa se mantiene en un bucle infinito while (true) que espera la acción del usuario y ejecuta la opción correspondiente.
+
+````php
+    while (true) {
+    mostrarMenu();
+    $option = trim(fgets(STDIN));
+
+    switch ($option) {
+        ...
+    }
+}
+
+````
+
+- Cada número del menú corresponde a una acción CRUD:
+
+🔹 1. Listar tareas (READ)
+
+- Llama a la función readTask() para **mostrar todas las tareas** almacenadas.
+- 📌 También muestra el total de tareas registradas en la base de datos.
+
+````php
+    case 1:
+        readTask();
+        echo "📋  Cantidad de tareas registradas: " . count(readTask()) . "🧮\n";
+        break;
+````
+
+🔹 2. Crear nueva tarea (CREATE)
+
+- Solicita los datos de una **nueva tarea** por consola y los envía a la función createTask().
+- ✅ Inserta la nueva tarea en la base de datos tareas_db.
+
+````php
+    case 2:
+        echo "🆕  Nueva Tarea: \n";
+        echo "Título: ";
+        $titulo = trim(fgets(STDIN));
+
+        echo "Descripción: ";
+        $descripcion = trim(fgets(STDIN));
+
+        echo "Fecha (YYYY-MM-DD): ";
+        $fecha_caducidad = trim(fgets(STDIN));
+
+        createTask($titulo, $descripcion, $fecha_caducidad);
+        break;
+````
+
+🔹 3. Editar tarea (UPDATE)
+
+- Permite **modificar una tarea existente** según su identificador ID.
+- 🛠️ El sistema muestra los valores actuales y permite modificar solo los campos deseados.
+
+````php
+    case 3:
+        echo "Ingrese el ID de la tarea a actualizar: ";
+        $id = intval(trim(fgets(STDIN)));
+        updateTask($id);
+        break;
+````
+
+🔹 4. Eliminar tarea (DELETE)
+
+- **Borra una tarea según su ID**, previa confirmación.
+- 🗑️ La función deleteTask() confirma la operación antes de ejecutar el borrado.
+
+````php
+    case 4:
+        echo "ID de la tarea a eliminar: ";
+        $id = intval(trim(fgets(STDIN)));
+        deleteTask($id);
+        break;
+````
+
+🔹 5. Buscar tarea (SEARCH)
+
+- Inicia el **buscador interactivo** mediante la función searchTask().
+
+- 🔍 Permite buscar tareas por ID, título, fecha de caducidad o estado (completada/no completada).
+
+````php
+    case 5:
+        searchTask();
+        break;
+````
+
+🔹 6. Salir (EXIT)
+
+- **Finaliza la ejecución del programa** de forma segura.
+- ❎ Muestra un mensaje de despedida antes de cerrar la aplicación.
+
+````php
+    case 6:
+        echo "❎  Saliendo del programa...\n";
+        exit;
+````
+
+🔹 Opción no válida (DEFAULT)
+
+- Si el usuario introduce una opción incorrecta, el sistema muestra un mensaje de advertencia.
+- ⚠️ Esto evita errores y mantiene la estabilidad del programa.
+
+````php
+    default:
+        echo "⚠️  Opción no válida. Intente de nuevo.\n";
+        break;
+````
+
+💻 **Ejemplo de ejecución en consola**
+
+````bash
+    =========================
+    📋 GESTOR DE TAREAS
+    =========================
+    1. 📜  Listar tareas
+    2. ✏️   Crear nueva tarea
+    3. 🛠️   Editar tarea
+    4. 🗑️   Eliminar tarea
+    5. 🔍  Buscar tarea
+    6. 🚪  Salir
+    👉  Seleccione una opción: 2
+
+    🆕  Nueva Tarea:
+    Título: Practicar PHP
+    Descripción: Repasar funciones y sentencias preparadas
+    Fecha (YYYY-MM-DD): 2025-10-25
+    ✅  Tarea creada correctamente.
+````
+
+🔹🔹Funciones que implementa:
+readTask(), createTask(), updateTask(), deleteTask(), searchTask()
+
+---
 
 ## 🛡️ Buenas prácticas aplicadas
 
