@@ -98,6 +98,8 @@ Abre el panel de control de XAMPP y activa:
 
 ````
 
+---
+
 ## ⚙️ Descripción mas detallada
 
 A continuacion explicacion del proyecto archivo por archivo.
@@ -166,6 +168,8 @@ function showMessageDB($created_db, $conn): void {
 $conn->select_db("tareas_db");
 ````
 
+---
+
 **🧱 2_crear_db.php — Creación de la Tabla `tareas` (Tareas_APP)**
 
 Este script PHP pertenece al proyecto **Tareas_APP**, y tiene como objetivo **crear la tabla principal `tareas`** dentro de la base de datos `tareas_db`, previamente creada con `1_conexion.php`.
@@ -229,6 +233,8 @@ El archivo `2_crear_db.php` realiza los siguientes pasos:
 ````php
     $conn->close();
 ````
+
+---
 
 **📝 3_crearTarea.php — Creación de nuevas tareas (Tareas_APP)**
 Este script forma parte del proyecto `Tareas_APP`, una aplicación de gestión de tareas en PHP.
@@ -295,6 +301,8 @@ El archivo `3_crearTarea.php` define una función que **crea tareas** mediante u
         : "❌  ERROR: no se pudo crear la tarea.\n";
     $sql->close(); // Cierre de la conexion
 ````
+
+---
 
 **📋 4.1_leerTareas.php — Lectura y listado de tareas (Tareas_APP)**
 El archivo `4.1_leerTareas.php` forma parte del proyecto `Tareas_APP`, una aplicación por consola desarrollada en PHP que implementa un sistema **CRUD** completo para la gestión de tareas.
@@ -388,6 +396,8 @@ Además, devuelve los resultados como un array asociativo, lo que permite reutil
     📊 Completada: 0
     ------------------------------
 ````
+
+---
 
 **🛠️ 4.2_actualizarTareas.php — Actualización de tareas (Tareas_APP)**
 El archivo **4.2_actualizarTareas.php** forma parte del proyecto `Tareas_APP`, desarrollado en PHP como aplicación de consola para la gestión de tareas.
@@ -489,6 +499,8 @@ Su propósito es **actualizar los datos de una tarea existente** en la base de d
     return $result;
 ````
 
+---
+
 **🗑️ 4.3_eliminarTarea.php — Eliminación de tareas (`Tareas_APP`)**
 El archivo `4.3_eliminarTarea.php` forma parte del proyecto `Tareas_APP`, una aplicación de consola desarrollada en PHP que implementa un sistema **CRUD** completo sobre la base de datos `tareas_db`.
 Su objetivo es **eliminar una tarea existente de la tabla `tareas`**, tras una confirmación por parte del usuario, utilizando sentencias preparadas (MySQLi) para garantizar la seguridad y evitar inyecciones SQL.
@@ -580,6 +592,8 @@ Su objetivo es **eliminar una tarea existente de la tabla `tareas`**, tras una c
     ⚠️  No se encontró la tarea con ID 99.
 ````
 
+---
+
 **🔍 4.4_buscarTareas.php — Búsqueda avanzada de tareas (Tareas_APP)**
 El archivo **4.4_buscarTareas.php** pertenece al proyecto `Tareas_APP`, una aplicación desarrollada en PHP por consola que gestiona tareas mediante operaciones CRUD sobre una base de datos MySQL.
 Su **función principal es buscar tareas según distintos criterios**, ofreciendo un menú interactivo en la terminal.
@@ -611,7 +625,7 @@ Esta funcionalidad amplía las capacidades del sistema permitiendo consultas din
 
 - El usuario **introduce un número del 1 al 5** para seleccionar la operación deseada.
 
-````php
+````bash
     echo "\n=========================\n";
     echo " 🔍 BUSCADOR DE TAREAS\n";
     echo "=========================\n";
@@ -621,6 +635,7 @@ Esta funcionalidad amplía las capacidades del sistema permitiendo consultas din
     echo "4. 📊 Buscar por Estado (completada o no)\n";
     echo "5. ↩️  Volver al menú principal\n";
     echo "👉  Seleccione una opción: ";
+
 ````
 
 🔸 **Caso 1: Buscar por ID**
@@ -723,14 +738,13 @@ Esta funcionalidad amplía las capacidades del sistema permitiendo consultas din
             echo "📊 Completada: " . $task['completada'] . "\n";
         }
     }
-
 ````
 
 💻 **Ejemplo de ejecución en consola**
 
 - Mostramos el resultado de una busqueda.
-  
-````php
+
+````bash
     =========================
     🔍 BUSCADOR DE TAREAS
     =========================
@@ -751,6 +765,242 @@ Esta funcionalidad amplía las capacidades del sistema permitiendo consultas din
 
     ✅ Se han encontrado 1 coincidencias.
 ````
+
+📤 **Comportamiento general**
+❓ Tipo de búsqueda | 📝Descripción             | ✅ Resultado
+🆔 ID               | Busca una tarea específica | 1 registro o mensaje de error
+📌 Título           | Búsqueda parcial o total   | Lista de coincidencias
+📅 Fecha            | Filtrado flexible (día, mes o año) | Registros dentro del rango
+📊 Estado           | Tareas completadas o pendientes    | Lista filtrada
+↩️ Volver           | Retorna al menú principal  | —
+
+---
+
+📌 **4.5_insertarTareasEjemplo.php — Inserción masiva de tareas de ejemplo (Tareas_APP)**
+El archivo 4.5_insertarTareasEjemplo.php pertenece al proyecto `Tareas_APP`, una aplicación en PHP por consola que **implementa un sistema CRUD completo** sobre una base de datos MySQL.
+Su propósito es **insertar** automáticamente en la base de datos con un conjunto de **tareas** de ejemplo, utilizando sentencias preparadas (MySQLi) para garantizar seguridad y eficiencia.
+
+Este script resulta ideal para inicializar el sistema, probar funcionalidades del CRUD (listar, buscar, actualizar, eliminar) y **simular datos reales** en el entorno de desarrollo.
+
+1 **Importación de dependencias**
+
+- El script incluye los archivos esenciales del proyecto:
+
+1_conexion.php  → establece la conexión con el servidor y selecciona la base de datos.
+includes.php    → contiene funciones globales y la conexión activa $conn.
+
+````php
+    require_once("1_conexion.php");
+    require_once("includes.php");
+````
+
+2 **Definición del conjunto de tareas de ejemplo**
+
+- Se crea un array multidimensional con tareas de prueba.
+- Cada tarea incluye:
+
+🔸 titulo           → nombre breve de la tarea.
+🔸 descripcion      → detalle explicativo.
+🔸 fecha_caducidad  → fecha límite (YYYY-MM-DD).
+🔸 completada       → estado booleano (true o false).
+
+- 📌 Total de tareas: **25 registros** predefinidos con fechas variadas y estados mezclados.
+
+💻 **Ejemplo de ejecución en consola**
+
+- A continuación se muestran algunos de los registros.
+  
+````php
+    $tareas = [
+        ["Estudiar PHP", "Repasar temas de PHP para FP DAW", "2025-10-20", true],
+        ["Comprar pan", "Ir a la panadería a comprar pan fresco", "2025-10-16", false],
+        ["Preparar entrega DAW", "Terminar proyecto y subirlo al servidor", "2025-10-25", false],
+    ...
+    ];
+````
+
+3 **Preparación de sentencias SQL**
+
+- Se preparan dos sentencias MySQLi:
+- Una para comprobar si la tarea ya existe, evitando duplicados.
+- Otra para insertar nuevos registros.
+  
+````php
+    $check = $conn->prepare("SELECT COUNT(*) FROM tareas WHERE titulo = ? AND fecha_caducidad = ?");
+    $insert = $conn->prepare("INSERT INTO tareas (titulo, descripcion, fecha_caducidad, completada) VALUES (?, ?, ?, ?)");
+````
+
+4 **Recorrido e inserción controlada**
+
+1. El script recorre el array $tareas y, por cada tarea:
+2. Verifica duplicados (mismo título y fecha).
+3. Inserta la tarea si no existe.
+4. Muestra un mensaje informativo del resultado.
+
+````php
+    foreach ($tareas as $tarea) {
+        [$titulo, $descripcion, $fecha, $completada] = $tarea;
+
+        $check->bind_param("ss", $titulo, $fecha);
+        $check->execute();
+        $check->bind_result($existe);
+        $check->fetch();
+        $check->free_result();
+
+        if ($existe > 0) {
+            echo "⚠️  Tarea duplicada (no insertada): $titulo ($fecha)\n";
+            continue;
+        }
+
+        $insert->bind_param("sssi", $titulo, $descripcion, $fecha, $completada);
+        if ($insert->execute()) {
+            echo "✅  Insertada: $titulo ($fecha)\n";
+        } else {
+            echo "❌  Error insertando '$titulo': " . $conn->error . "\n";
+        }
+    }
+````
+
+5 **Resultado final**
+
+- Al completar el proceso, se muestra el número total de tareas procesadas.
+
+````php
+    echo "\n🎉 Inserción completada. Total tareas procesadas: " . count($tareas) . "\n";
+````
+
+6 **Cerrar conexiones**
+
+- Finalmente se cierran las conexiones preparadas y la conexión principal.
+
+````php
+    $check->close();
+    $insert->close();
+    $conn->close();
+````
+
+💻 **Ejemplo de ejecución en consola**
+
+- Ejemplo de como se muestra en consola los datos insertados o si hay datos duplicados (no insertados).
+
+````bash
+    ✅  Insertada: Estudiar PHP (2025-10-20)
+    ✅  Insertada: Comprar pan (2025-10-16)
+    ✅  Insertada: Preparar entrega DAW (2025-10-25)
+    ⚠️  Tarea duplicada (no insertada): Estudiar PHP (2025-10-20)
+    ✅  Insertada: Configurar servidor Apache (2025-10-28)
+
+    🎉 Inserción completada. Total tareas procesadas: 25
+````
+
+📤 **Comportamiento y retorno**
+📜 Caso                |Resultado                   |Descripción
+✅ Inserción exitosa   |Muestra mensaje “Insertada” |La tarea se agregó correctamente
+⚠️ Duplicado detectado |Muestra “Tarea duplicada”   |Ya existe una tarea con ese título y   fecha
+❌ Error SQL           | Muestra mensaje de error   |Fallo durante la ejecución de la consulta
+
+---
+
+🔎 **4.6_getTaskById.php — Consulta individual de tarea (Tareas_APP)**
+El archivo 4.6_getTaskById.php forma parte del proyecto `Tareas_APP`, una aplicación desarrollada en **PHP (CLI)** que implementa un sistema CRUD completo sobre una base de datos MySQL.
+Su propósito es **buscar una tarea específica** en la tabla tareas a partir de su identificador **(id)** y **devolver** sus datos en formato **array asociativo**.
+
+1 **Propósito general**
+
+- La función getTaskById() se utiliza de forma interna en varios módulos del proyecto, como:
+- updateTask() → para cargar los datos antes de editarlos.
+- deleteTask() → para verificar la existencia antes de eliminar.
+- searchTask() → para mostrar resultados individuales.
+
+Su diseño modular permite **reutilizar la misma consulta SQL en todo el programa**, garantizando consistencia y reducción de código duplicado.
+
+2 **Definición de la función**
+🔸 Parámetro: $id →
+        identificador numérico de la tarea que se desea consultar.
+🔸 Tipo de retorno: ?array →
+        devuelve un array asociativo con los datos de la tarea, o null si no existe ningún registro con ese ID.
+
+````php
+    function getTaskById($id): ?array {
+    global $conn;
+````
+
+3 **Ejecución de la consulta SQL**
+
+- Se utiliza una sentencia preparada (prepare()) para proteger la base de datos frente a inyecciones SQL.
+🔸El parámetro "i" indica que $id es un entero.
+🔸La sentencia execute() ejecuta la consulta sobre la conexión activa $conn.
+  
+````php
+    $sql = $conn->prepare("SELECT * FROM tareas WHERE id = ?");
+    $sql->bind_param("i", $id);
+    $sql->execute();
+````
+
+4 **Obtención y procesamiento del resultado**
+
+- El resultado de la consulta se obtiene mediante el método get_result() y se transforma en un array asociativo.
+
+````php
+    $result = $sql->get_result();
+    $task = $result->fetch_assoc();
+````
+
+- Si el ID existe, $task contendrá algo similar a:
+
+````bash
+    [
+    "id" => 3,
+    "titulo" => "Preparar entrega DAW",
+    "descripcion" => "Terminar proyecto y subirlo al servidor",
+    "fecha_caducidad" => "2025-10-25",
+    "completada" => 0
+    ]
+````
+
+5 **Cierre de la consulta y retorno**
+
+- La función cierra la sentencia preparada y devuelve el resultado.
+- El operador ?: (null coalescing) garantiza que, si $task está vacío o false, se devuelva null.
+
+````php
+    $sql->close();
+    return $task ?: null; // Retorna el array si existe, o null si está vacío
+````
+
+💻 **Ejemplo de uso en el programa**
+
+````php
+    $id = 5;
+    $task = getTaskById($id);
+
+    if ($task) {
+        echo "Tarea encontrada: " . $task['titulo'] . "\n";
+    } else {
+        echo "⚠️  No existe ninguna tarea con ID $id.\n";
+    }
+````
+
+💻 **Salida esperada en consola**
+
+- Si la tarea existe:
+  
+````bash
+    Tarea encontrada: Estudiar PHP
+````
+
+- O, si el ID no existe:
+
+````bash
+    ⚠️  No existe ninguna tarea con ID 999.
+````
+
+📤 **Valor de retorno**
+
+ |📜 Resultado            |Tipo devuelto | Descripción
+ |✅ Tarea encontrada     |array         |Devuelve los datos de la tarea seleccionada
+ |⚠️ Tarea no encontrada  |null          |No existe ningún registro con ese ID
+ |❌ Error SQL (raro)     |null          |Si la ejecución falla, devuelve null
 
 ## 🛡️ Buenas prácticas aplicadas
 
