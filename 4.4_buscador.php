@@ -4,6 +4,7 @@ require_once("includes.php");
 // Busca los datos por id, titulo, fecha o Estado de la tarea
 /**
  * Summary of searchTask
+ * @global $conn
  * @return void
  * retorno: Muestra el menu de busqueda de tareas
  * Busquea por ID: Busca una tarea por su ID
@@ -31,6 +32,7 @@ function searchTask() {
 
     switch ($option) {
         case 1:
+            // Buscar por ID
             echo "Ingrese el ID de la tarea: ";
             $id = intval(trim(fgets(STDIN)));
             $task = getTaskById($id);
@@ -43,12 +45,13 @@ function searchTask() {
             break;
 
         case 2:
+            // Buscar por Título
             if(!function_exists('likeParam')){
                 function likeParam($param) {
                     $param = trim($param);              // elimina espacios al principio y final
                     $param = addcslashes($param, '%_'); // escapa % y _ para búsquedas literales
                     $param = strtolower($param);        // convierte a minúsculas
-                return "%$param%";                          // añade comodines para el LIKE
+                return "%$param%";                              // añade comodines para el LIKE
                 }
             }
 
@@ -73,6 +76,7 @@ function searchTask() {
             break;
 
         case 3:
+            // Buscar por Fecha
             echo "Ingrese la fecha (YYYY o YYYY-MM o YYYY-MM-DD): ";
             $fecha = trim(fgets(STDIN));
 
@@ -125,6 +129,7 @@ function searchTask() {
             break;
 
         case 4:
+            // Buscar por Estado
             echo "¿Desea ver tareas completadas (1)✅ o no completadas (0)❌?: ";
             $completada = trim(fgets(STDIN));
 
@@ -165,7 +170,13 @@ function searchTask() {
     }
 }
 
- // Muestra resultados en el mismo formato que readTask()
+/**
+ * Summary of displayData
+ * @param array $tasks
+ * @return void
+ * Comprueba si hay tareas y las muestra, sino muestra un mensaje
+ * Muestra resultados en el mismo formato que readTask()
+ */
 function displayData(array $tasks) {
     if (empty($tasks)) {
         echo "⚠️  No se encontraron tareas que coincidan con la búsqueda.\n";

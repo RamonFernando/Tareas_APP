@@ -10,8 +10,14 @@
     completada BOOLEAN DEFAULT FALSE
 )";
 
-    // Recive por parametro la variable con la conexion a la base de datos y
-    // la variable con la tabla (tareas)
+    /**
+     * Summary of create_table
+     * @param mixed $conn
+     * @param mixed $sql_table
+     * @return bool
+     * Recive por parametro la variable con la conexion a la base de datos y
+     * la variable con la tabla (tareas)
+     */
     function create_table($conn, $sql_table){
         if($conn->query($sql_table))
             return true;
@@ -23,6 +29,12 @@
     $create_table = create_table($conn, $sql_table);
 
     // 3.3 Comprueba si se creo la tabla correctamente y muestra un mensaje
+    /**
+     * Summary of showMessageTable
+     * @param mixed $create_table
+     * @param mixed $conn
+     * @return void
+     */
     function showMessageTable($create_table, $conn){
         if($create_table)
             echo "✅ Tabla creada correctamente.\n";
