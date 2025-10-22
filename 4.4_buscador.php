@@ -65,6 +65,8 @@ function searchTask() {
             if (!empty($tasks)) {
                 displayData($tasks);
                 echo "\n✅ Se han encontrado " . count($tasks) . " coincidencias.\n";
+            }else{
+                echo "\n⚠️  No se encontraron tareas que coincidan con la búsqueda.\n";
             }
             $sql->close();
             searchTask();

@@ -28,12 +28,18 @@ while (true) {
             break;
 
         case 2:
-            // Crear tarea
-            $titulo = "";
-            $descripcion = "";
-            $fecha_caducidad = "";
+            // Crear nueva tarea
+            echo "🆕  Nueva Tarea: \n";
+            echo "Título: ";
+            $titulo = trim(fgets(STDIN));
+
+            echo "Descripción: ";
+            $descripcion = trim(fgets(STDIN));
+
+            echo "Fecha (YYYY-MM-DD): ";
+            $fecha_caducidad = trim(fgets(STDIN));
+
             createTask($titulo, $descripcion, $fecha_caducidad);
-            
             break;
 
         case 3:
