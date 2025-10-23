@@ -39,7 +39,10 @@ while (true) {
             echo "Fecha (YYYY-MM-DD): ";
             $fecha_caducidad = trim(fgets(STDIN));
 
-            createTask($titulo, $descripcion, $fecha_caducidad);
+            echo "Completada (si/no): ";
+            $completada = trim(fgets(STDIN));
+
+            createTask($titulo, $descripcion, $fecha_caducidad, $completada = "pendiente");
             break;
 
         case 3:

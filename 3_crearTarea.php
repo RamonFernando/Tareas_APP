@@ -9,19 +9,20 @@
      * @param mixed $titulo
      * @param mixed $descripcion
      * @param mixed $fecha_caducidad
+     * @param mixed $completada
      * @return bool
      * retorno: Parámetros: $titulo, $descripcion, $fecha_caducidad
      * Devuelve true si la tarea se crea correctamente, false en caso contrario
      */
-    function createTask($titulo,$descripcion, $fecha_caducidad): bool|mysqli_result{
+    function createTask($titulo,$descripcion, $fecha_caducidad, $completada = "pendiente"): bool|mysqli_result{
         
         global $conn;
         
         // 1. Preparamos la consulta para evitar inyeccion de codigo en la BD.
-        $sql = $conn->prepare("INSERT INTO tareas (titulo, descripcion, fecha_caducidad) values (?, ?, ?)");
+        $sql = $conn->prepare("INSERT INTO tareas (titulo, descripcion, fecha_caducidad, completada) values (?, ?, ?, ?)");
         
         // 2. Enlazamos los parámetros ("sss" = string, string, string), si fuera un entero "i" = integer
-        $sql->bind_param("sss", $titulo, $descripcion, $fecha_caducidad);
+        $sql->bind_param("sssi", $titulo, $descripcion, $fecha_caducidad, $completada);
         
         $result = $sql->execute();
         echo $result
