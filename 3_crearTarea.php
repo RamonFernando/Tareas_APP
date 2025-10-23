@@ -14,7 +14,7 @@
      * retorno: Parámetros: $titulo, $descripcion, $fecha_caducidad
      * Devuelve true si la tarea se crea correctamente, false en caso contrario
      */
-    function createTask($titulo,$descripcion, $fecha_caducidad, $completada = "pendiente"): bool|mysqli_result{
+    function createTask($titulo,$descripcion, $fecha_caducidad, $completada): bool|mysqli_result{
         
         global $conn;
         

@@ -42,7 +42,7 @@ while (true) {
             echo "Completada (si/no): ";
             $completada = trim(fgets(STDIN));
 
-            createTask($titulo, $descripcion, $fecha_caducidad, $completada = "pendiente");
+            createTask($titulo, $descripcion, $fecha_caducidad, $completada);
             break;
 
         case 3:
