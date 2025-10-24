@@ -190,7 +190,7 @@ function displayData(array $tasks) {
         echo "📌 Título: " . $task['titulo'] . "\n";
         echo "📝 Descripción: " . $task['descripcion'] . "\n";
         echo "📅 Fecha: " . $task['fecha_caducidad'] . "\n";
-        echo "📊 Completada: " . $task['completada'] . "\n";
+        echo "📊 Completada (1✅ o 0❌):" . $task['completada'] . "\n";
     }
 }
 ?>

@@ -45,10 +45,12 @@ Tareas_APP/
 ├── 2_crear_tabla.php          # Script para crear la tabla principal
 ├── 3_crear_db.php             # Script para crear la base de datos
 │
-├── 4_crearTarea.php           # Crear nueva tarea (CREATE)
-├── 4.1_leerTareas.php         # Mostrar todas las tareas (READ)
-├── 4.2_actualizarTarea.php    # Modificar tarea existente (UPDATE)
-├── 4.3_eliminarTarea.php      # Eliminar tarea por ID (DELETE)
+├── 4.1_crearTarea.php         # Crear nueva tarea (CREATE)
+├── 4.2_leerTareas.php         # Mostrar todas las tareas (READ)
+├── 4.3_actualizarTarea.php    # Modificar tarea existente (UPDATE)
+├── 4.4_eliminarTarea.php      # Eliminar tarea por ID (DELETE)
+├── include.php                # Incluye los accesos a los archivos
+├── buscarPorId.php            # Script para buscar una tarea por su Id
 │
 └── index.php                  # Menú principal de la aplicación
 
@@ -279,7 +281,7 @@ El archivo `3_crearTarea.php` define una función que **crea tareas** mediante u
 - Tipo devuelto: bool|mysqli_result (retorna true si la inserción fue exitosa).
 
 ````php
-    function createTask($titulo, $descripcion, $fecha_caducidad): bool|mysqli_result {
+    function createTask($titulo, $descripcion, $fecha_caducidad, $completada): bool|mysqli_result {
         global $conn;
     }
 ````
@@ -292,7 +294,7 @@ El archivo `3_crearTarea.php` define una función que **crea tareas** mediante u
 
 ````php
     $sql = $conn->prepare("INSERT INTO tareas (titulo, descripcion, fecha_caducidad) VALUES (?, ?, ?)");
-    $sql->bind_param("sss", $titulo, $descripcion, $fecha_caducidad);
+    $sql->bind_param("sssi", $titulo, $descripcion, $fecha_caducidad, $completada);
 ````
 
 4 **Ejecución e informe del resultado**
