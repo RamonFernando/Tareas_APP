@@ -17,9 +17,9 @@ function mostrarMenu() {
 }
 
 while (true) {
+
     mostrarMenu();
     $option = trim(fgets(STDIN)); // Leer opción desde teclado
-
     switch ($option) {
         case 1:
             // Listar tareas

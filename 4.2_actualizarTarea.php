@@ -35,6 +35,13 @@ require_once("includes.php");
 
         echo "Completada actualmente (1 = sí✅, 0 = no❌): " . $task['completada'] . "\nNuevo valor (1 o 0): ";
         $completada_task = trim(fgets(STDIN));
+        
+        // Comprobamos que el usuario introduce los numeros correctos
+        if (!is_numeric($completada_task) && $completada_task !== '' && $completada_task !== '0' && $completada_task !== '1') {
+            echo "⚠️  El valor introducido no es un número o no es correcto.\n";
+            return false;
+        }
+
         ($completada_task === '')
             ? $completada = $task['completada']
             : $completada = intval($completada_task);
