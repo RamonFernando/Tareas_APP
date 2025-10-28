@@ -291,10 +291,20 @@ El archivo `3_crearTarea.php` define una función que **crea tareas** mediante u
 - Se usa una sentencia preparada para proteger la base de datos frente a ataques de inyección SQL
 - "sss" indica que los tres valores son strings.
 - Si alguno fuera numérico, se usaría "i" (integer), "d" (double) o "b" (blob).
+- Comprobamos que la consulta no este duplicada con otro ID.
 
 ````php
     $sql = $conn->prepare("INSERT INTO tareas (titulo, descripcion, fecha_caducidad) VALUES (?, ?, ?)");
     $sql->bind_param("sssi", $titulo, $descripcion, $fecha_caducidad, $completada);
+````
+
+````php
+    // 4. Comprobamos si la tarea ya existe
+        if($result->num_rows > 0){
+            echo "❌  ERROR: La tarea ya existe en la base de datos.\n";
+            $sql->close();
+            return false;
+        }
 ````
 
 4 **Ejecución e informe del resultado**
@@ -476,6 +486,7 @@ Su propósito es **actualizar los datos de una tarea existente** en la base de d
 - El usuario puede dejar un campo vacío si no desea modificarlo.
 - El programa tomará entonces el valor anterior por defecto.
 - El mismo proceso se repite para descripción, fecha y estado de completada.
+- Comprobamos que se introduzcan los valores correctos en la tarea completada
 
 ````php
     echo "Título actual:" . $task['titulo'] . "\nNuevo título: ";
@@ -490,6 +501,11 @@ Su propósito es **actualizar los datos de una tarea existente** en la base de d
     if ($fecha === '') $fecha = $task['fecha_caducidad'];
 
     echo "Completada actualmente (1 = sí✅, 0 = no❌): " . $task['completada'] . "\nNuevo valor (1 o 0): ";
+    // Comprobamos que el usuario introduce los numeros correctos
+        if (!is_numeric($completada_task) && $completada_task !== '' && $completada_task !== '0' && $completada_task !== '1') {
+            echo "⚠️  El valor introducido no es un número o no es correcto.\n";
+            return false;
+        }
     $completada_task = trim(fgets(STDIN));
     ($completada_task === '')
         ? $completada = $task['completada']

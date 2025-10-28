@@ -26,14 +26,14 @@
         
         // 3. Ejecutamos la consulta y comprobamos que no existe en la BD
         $result = $conn->query("SELECT * FROM tareas WHERE titulo = '$titulo' and fecha_caducidad = '$fecha_caducidad'");
+        
+        // 4. Comprobamos si la tarea ya existe
         if($result->num_rows > 0){
             echo "❌  ERROR: La tarea ya existe en la base de datos.\n";
             $sql->close();
             return false;
         }
-
-
-
+        
         $result = $sql->execute();
         echo $result
                 ? "✅  Tarea creada correctamente.\n"
