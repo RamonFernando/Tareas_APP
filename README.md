@@ -515,10 +515,11 @@ Su propósito es **actualizar los datos de una tarea existente** en la base de d
 
     echo "Completada actualmente (1 = sí✅, 0 = no❌): " . $task['completada'] . "\nNuevo valor (1 o 0): ";
     // Comprobamos que el usuario introduce los numeros correctos
-        if ($completada_task !== '' && $completada_task !== '0' && $completada_task !== '1') {
-            echo "⚠️  El valor introducido no es un número o no es correcto.\n";
-            return false;
-        }
+    if ($completada_task !== '' && $completada_task !== '0' && $completada_task !== '1') {
+        echo "⚠️  El valor introducido no es valido, debe ser 1(✅sí) o 0(❌no).\n";
+        return false;
+    }
+        
     $completada_task = trim(fgets(STDIN));
     ($completada_task === '')
         ? $completada = $task['completada']
