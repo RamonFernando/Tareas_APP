@@ -31,14 +31,26 @@ require_once("includes.php");
 
         echo "Fecha actual: " . $task['fecha_caducidad'] . "\nNueva fecha (YYYY-MM-DD): ";
         $fecha = trim(fgets(STDIN));
-        if ($fecha === '') $fecha = $task['fecha_caducidad'];
+        
+        if ($fecha === '')
+            $fecha = $task['fecha_caducidad'];
+            // Validamos formato
+        else if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha)) {
+            echo "⚠️  Formato de fecha no válido. Usa YYYY-MM-DD.\n";
+            return false;
+        }
+        // Comprobamos que la fecha es correcta
+        if (!checkdate(substr($fecha, 5, 2), substr($fecha, 8, 2), substr($fecha, 0, 4))) {
+            echo "⚠️  La fecha introducida no es correcta.\n";
+            return false;
+        }
 
         echo "Completada actualmente (1 = sí✅, 0 = no❌): " . $task['completada'] . "\nNuevo valor (1 o 0): ";
         $completada_task = trim(fgets(STDIN));
         
         // Comprobamos que el usuario introduce los numeros correctos
-        if (!is_numeric($completada_task) && $completada_task !== '' && $completada_task !== '0' && $completada_task !== '1') {
-            echo "⚠️  El valor introducido no es un número o no es correcto.\n";
+        if ($completada_task !== '' && $completada_task !== '0' && $completada_task !== '1') {
+            echo "⚠️  El valor introducido no es valido, debe ser 1(✅sí) o 0(❌no).\n";
             return false;
         }
 
@@ -63,7 +75,7 @@ require_once("includes.php");
         // Comprobamos si la actualización se realizo correctamente
         echo ($sql->affected_rows > 0)
             ? "✅  Actualización realizada correctamente\n"
-            : "⚠️  No se encontró el id: ($id) o ha ocurrido un error al actualizar.\n";
+            : "⚠️  No se encontró el id: ($id) o no han habido cambios.\n";
 
         $sql->close();
         return $result;

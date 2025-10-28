@@ -486,7 +486,9 @@ Su propósito es **actualizar los datos de una tarea existente** en la base de d
 - El usuario puede dejar un campo vacío si no desea modificarlo.
 - El programa tomará entonces el valor anterior por defecto.
 - El mismo proceso se repite para descripción, fecha y estado de completada.
-- Comprobamos que se introduzcan los valores correctos en la tarea completada
+- Hacemos validaciones para la entrada de fecha y tarea completada.
+    Comprobamos que los valores de la fecha sean correctos y que la fecha exista.
+    Comprobamos que se introduzcan los valores correctos en la tarea completada.
 
 ````php
     echo "Título actual:" . $task['titulo'] . "\nNuevo título: ";
@@ -498,11 +500,22 @@ Su propósito es **actualizar los datos de una tarea existente** en la base de d
 
     echo "Fecha actual: " . $task['fecha_caducidad'] . "\nNueva fecha (YYYY-MM-DD): ";
     $fecha = trim(fgets(STDIN));
-    if ($fecha === '') $fecha = $task['fecha_caducidad'];
+    if ($fecha === '')
+            $fecha = $task['fecha_caducidad'];
+            // Validamos formato
+        else if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha)) {
+            echo "⚠️  Formato de fecha no válido. Usa YYYY-MM-DD.\n";
+            return false;
+        }
+        // Comprobamos que la fecha es correcta
+        if (!checkdate(substr($fecha, 5, 2), substr($fecha, 8, 2), substr($fecha, 0, 4))) {
+            echo "⚠️  La fecha introducida no es correcta.\n";
+            return false;
+        }
 
     echo "Completada actualmente (1 = sí✅, 0 = no❌): " . $task['completada'] . "\nNuevo valor (1 o 0): ";
     // Comprobamos que el usuario introduce los numeros correctos
-        if (!is_numeric($completada_task) && $completada_task !== '' && $completada_task !== '0' && $completada_task !== '1') {
+        if ($completada_task !== '' && $completada_task !== '0' && $completada_task !== '1') {
             echo "⚠️  El valor introducido no es un número o no es correcto.\n";
             return false;
         }
