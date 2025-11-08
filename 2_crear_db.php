@@ -4,11 +4,12 @@
     // 3.1 Creamos la tabla tareas
     $sql_table = "CREATE TABLE IF NOT EXISTS tareas (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    titulo VARCHAR(100) NOT NULL,
-    descripcion VARCHAR(255),
-    fecha_caducidad DATE,
+    titulo VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL UNIQUE,
+    descripcion VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+    fecha_caducidad DATETIME DEFAULT NOW(),
     completada BOOLEAN DEFAULT FALSE
-)";
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
+
 
     /**
      * Summary of create_table

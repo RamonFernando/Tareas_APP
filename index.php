@@ -23,7 +23,7 @@ while (true) {
     switch ($option) {
         case 1:
             // Listar tareas
-            readTask();
+            // readTask();
             echo "📋  Cantidad de tareas registradas: " . count(readTask()) . "🧮\n";
             break;
 
@@ -39,8 +39,13 @@ while (true) {
             echo "Fecha (YYYY-MM-DD): ";
             $fecha_caducidad = trim(fgets(STDIN));
 
-            echo "Completada (si/no): ";
+            echo "Completada (1(Si)/ 2(No)): ";
             $completada = trim(fgets(STDIN));
+
+            if ($titulo == '' || $descripcion == '' || $fecha_caducidad == '' || $completada == '') {
+                echo "⚠️  Todos los campos son obligatorios.\n";
+                break;
+            }
 
             createTask($titulo, $descripcion, $fecha_caducidad, $completada);
             break;

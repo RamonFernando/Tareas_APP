@@ -87,10 +87,10 @@ function searchTask() {
 
             // Detectar qué tipo de formato escribió el usuario
             if ($fullDate) {
-                // Caso 1: formato completo YYYY-MM-DD → buscar hasta ese mes
-                $month = substr($fecha, 0, 7);
-                $sql = $conn->prepare("SELECT * FROM tareas WHERE DATE_FORMAT(fecha_caducidad, '%Y-%m') <= ?");
-                $sql->bind_param("s", $month);
+                // Caso 1: formato completo YYYY-MM-DD → buscar por dia
+                // $month = substr($fecha, 0, 7);
+                $sql = $conn->prepare("SELECT * FROM tareas WHERE DATE(fecha_caducidad) = ?");
+                $sql->bind_param("s", $fecha);
 
             } elseif ($yearAndMonth) {
                 // Caso 2: formato YYYY-MM → buscar exactamente ese mes
@@ -107,7 +107,7 @@ function searchTask() {
                 echo "❌  Formato incorrecto. Use uno de los siguientes formatos:\n";
                 echo "   - YYYY        → Buscar por año (ej: 2025)\n";
                 echo "   - YYYY-MM     → Buscar por mes (ej: 2025-10)\n";
-                echo "   - YYYY-MM-DD  → Buscar hasta ese mes (ej: 2025-10-19)\n";
+                echo "   - YYYY-MM-DD  → Buscar por dia (ej: 2025-10-19)\n";
                 searchTask();
                 break;
             }

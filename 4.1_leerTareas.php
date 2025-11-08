@@ -20,7 +20,7 @@ function readTask(){
             return [];
         };
 
-        // Mostramos resultados
+        // Guardamos los resultados en un array
         while($row = $sql->fetch_assoc())
             $tasks[] = $row;
         
